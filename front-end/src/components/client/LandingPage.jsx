@@ -1,8 +1,10 @@
 import React from 'react'
 
+const apiUrl = 'https://fakestoreapi.com/products';
+
 const LandingPage = () => {
   return (
-    <div>LandingPage</div>
+    <div className='landing page'>LandingPage</div>
   )
 }
 
