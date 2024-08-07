@@ -34,7 +34,9 @@ const LandingPage = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className='landing page'>LandingPage</div>
+    <div className='landing page'>
+        <Navbar />
+    </div>
   )
 }
 
