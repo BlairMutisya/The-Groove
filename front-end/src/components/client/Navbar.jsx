@@ -27,7 +27,7 @@ const Navbar = () => {
                         About
                     </NavLink>
                     <NavLink
-                        to="/listing"
+                        to="/spacelist"
                         className="nav-link cursor-pointer hover:scale-105 duration-200"
                     >
                         Listing

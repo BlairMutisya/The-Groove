@@ -1,4 +1,3 @@
-import React from 'react'
 import React, { useEffect, useState } from 'react';
 import Footer from './Footer'
 import Navbar from './Navbar'
@@ -7,7 +6,7 @@ import { Link } from 'react-router-dom'
 const apiUrl = 'https://fakestoreapi.com/products';
 
 const LandingPage = () => {
-    const [products, setProducts] = useState([]);
+    const [products, setProducts] = useState([]);  
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 

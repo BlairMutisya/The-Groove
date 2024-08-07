@@ -1,26 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
+import './styles.css';
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import Home from './Components/Home';
-import About from './Components/About';
-import Listing from './Components/Listing';
-import Agents from './Components/Agents';
-import Contact from './Components/Contact';
-import SpaceDetails from './Components/SpaceDetails';
+import About from './components/client/About';
+import Agents from './components/client/Agents';
+import Contact from './components/client/Contact';
+import SpaceDetails from './components/client/SpaceDetails';
+import LandingPage from './components/client/LandingPage';
+import SpaceList from './components/client/SpaceList';
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Home />
+    element: <LandingPage />
   }, 
   {
     path: "/about",
     element: <About />
   },
   {
-    path: "/listing",
-    element: <Listing />
+    path: "/spacelist",
+    element: <SpaceList />
   },
   {
     path:"/agents",
