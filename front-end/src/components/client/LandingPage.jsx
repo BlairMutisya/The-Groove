@@ -64,6 +64,15 @@ const LandingPage = () => {
                         </div>
                     </div>
                 </div>
+                <div className='p-5 pb-10 mb-10 gap-2 space-y-5 flex bg-[#fce8cf]'>
+                    <div className='w-[600px]'>
+                        <p className='mt-72 text-xl'>Are you searching for the ideal location to launch your business, host an event, or find your next office? Look no further! At The Groove, we offer a diverse selection of spaces tailored to meet your needs.</p>
+                    </div>
+                    <div className='flex space-x-4'>
+                        <img className='rounded-lg w-[300px] h-[500px] object-cover mt-' src='https://img.freepik.com/premium-photo/living-room-with-couch-coffee-table-tv-wall_517312-27396.jpg?uid=R157253250&semt=ais_hybrid' />
+                        <img className='rounded-lg w-[300px] h-[500px] object-cover mt-24' src='https://img.freepik.com/premium-photo/living-room-with-couch-coffee-table-tv-wall_517312-27396.jpg?uid=R157253250&semt=ais_hybrid' />
+                    </div>
+                </div>
             </div>
         </div>
     )
