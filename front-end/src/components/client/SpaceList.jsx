@@ -86,6 +86,7 @@ const SpaceList = () => {
           ))}
 
         </div>
+        <Footer />
         </div>
     </div>
   )
