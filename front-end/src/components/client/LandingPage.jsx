@@ -47,7 +47,22 @@ const LandingPage = () => {
                     <div className='ml-6 w-full'>
                         <img className='w-[500px] h-[520px] object-cover rounded-lg mr-6 mt-28 -mx-20' src='https://media.istockphoto.com/id/1575907553/photo/director-office-interior-design-computer-generated-image-of-office-architectural.jpg?s=1024x1024&w=is&k=20&c=RMsqxyfp6cLpqkOoAY71oK9_f5IeaFwBV4XM__BtGMI=' />
                     </div>
-
+                </div>
+                <div className='w-full max-w-5xl p-5 pb-10 mb-10 columns- gap-2 space-y-5 flex bg-[#fff3e5] '>
+                    <img className='rounded-lg w-[300px] h-[500px]' src='https://img.freepik.com/free-photo/young-people-working-from-modern-place_23-2148854173.jpg?uid=R157253250&semt=ais_hybrid' />
+                    <div className='bg-[#FCE8CF] h-screen w-[3000px]'>
+                        <h3 className='font-bold sm:text-5xl p-8 pb-0'>FEATURED SPACES</h3>
+                        <h3 className='font-bold sm:text-5xl p-11 pt-0 justify-center flex items-center'>FOR YOU</h3>
+                        <div>
+                            <img className='rounded-lg w-[300px] h-[500px] -mx-0 mt-1' src='https://img.freepik.com/premium-photo/living-room-with-couch-coffee-table-tv-wall_517312-27396.jpg?uid=R157253250&semt=ais_hybrid' />
+                        </div>
+                    </div>
+                    <div className='justify-center w-[1800px] pl-18 -mx-20 pt-[400px]'>
+                        <p className='text-xl'>All lovely spaces for you.No two spaces are ever the same.</p>
+                        <div className='p-10 pt-1'>
+                            <Link to='listing' className='text-2xl text-black font-semibold justify-center mr-10 p-20 group w-fit px-5 py-3 my-2 flex items-center rounded-lg bg-[#79a9c2] cursor-pointer transition-transform duration-300 hover:opacity-80 hover:scale-110'>view Spaces</Link>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
