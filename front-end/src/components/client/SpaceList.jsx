@@ -40,7 +40,9 @@ const SpaceList = () => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div>SpaceList</div>
+    <div name='spacelist'>
+        <Navbar className='navbar' />
+    </div>
   )
 }
 

@@ -59,7 +59,7 @@ const LandingPage = () => {
                     <div className='justify-center w-[1800px] pl-18 -mx-20 pt-[400px]'>
                         <p className='text-xl'>All lovely spaces for you.No two spaces are ever the same.</p>
                         <div className='p-10 pt-1'>
-                            <Link to='listing' className='text-2xl text-black font-semibold justify-center mr-10 p-20 group w-fit px-5 py-3 my-2 flex items-center rounded-lg bg-[#79a9c2] cursor-pointer transition-transform duration-300 hover:opacity-80 hover:scale-110'>view Spaces</Link>
+                            <Link to='spacelist' className='text-2xl text-black font-semibold justify-center mr-10 p-20 group w-fit px-5 py-3 my-2 flex items-center rounded-lg bg-[#79a9c2] cursor-pointer transition-transform duration-300 hover:opacity-80 hover:scale-110'>view Spaces</Link>
                         </div>
                     </div>
                 </div>
