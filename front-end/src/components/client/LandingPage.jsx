@@ -1,4 +1,8 @@
 import React from 'react'
+import React, { useEffect, useState } from 'react';
+import Footer from './Footer'
+import Navbar from './Navbar'
+import { Link } from 'react-router-dom'
 
 const apiUrl = 'https://fakestoreapi.com/products';
 
