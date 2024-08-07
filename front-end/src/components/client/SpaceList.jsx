@@ -42,6 +42,11 @@ const SpaceList = () => {
   return (
     <div name='spacelist'>
         <Navbar className='navbar' />
+        <div className='pt-20 bg-[#fff3e5]'>
+        <div className="flex justify-center text-5xl font-bold">
+          <h1 className="mb-11">Featured Spaces</h1>
+        </div>
+        </div>
     </div>
   )
 }
