@@ -3,7 +3,7 @@ import Navbar from './Navbar';
 import Footer from './Footer';
 import { Link } from 'react-router-dom';
 
-// const apiUrl = 'https://fakestoreapi.com/products';
+const apiUrl = 'https://fakestoreapi.com/products';
 
 // const SpaceList = () => {
 //     // const isBooked = product.isBooked;
