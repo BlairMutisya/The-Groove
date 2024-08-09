@@ -102,6 +102,32 @@ class Space(db.Model):
 
 
 # Payment Model
+class Payment(db.Model):
+    """
+    Represents a payment for the space.
+    Attributes:
+        id (int): The unique identifier for the payment.
+        user_id (int): The ID of the user who made the payment.
+        amount (float): The amount paid.
+        date_paid (datetime): The date the payment was made.
+        space_id (int): The ID of the space associated with this payment.
+        first_name (str): The first name of the user who made the payment.
+        last_name (str): The last name of the user who made the payment.
+        contacts (str): The contact details of the user who made the payment.
+        payment_mode (str): The mode of payment used.
+        message (str): Additional message or note related to the payment.
+    """
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Float, nullable=False)  # Price in KSH
+    rating = db.Column(db.Float, nullable=True)
+    status = db.Column(db.String(10), nullable=False)
+    image_url = db.Column(db.String(200), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # bookings = db.relationship('BookedSpace', backref='space', lazy=True)
+    # reviews = db.relationship('Review', backref='space', lazy=True)
 
     def __repr__(self):
         return (f"Payment(id={self.id}, user_id={self.user_id}, amount={self.amount}, date_paid={self.date_paid}, "
