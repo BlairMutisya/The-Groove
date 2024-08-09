@@ -5,36 +5,7 @@ from datetime import datetime
 db = SQLAlchemy()
 
 # User Model
-class User(db.Model, UserMixin):
-    """
-    Represents a user in the application.
-    Attributes:
-        id (int): The unique identifier for the user.
-        first_name (str): The first name of the user.
-        last_name (str): The last name of the user.
-        email (str): The email address of the user.
-        verification (bool): Indicates if the user's email address has been verified.
-        role (str): The role of the user, either 'client' or 'admin'.
-        password (str): The hashed password of the user.
-        spaces (List[Space]): One-to-many relationship with spaces taken by the user.
-    Methods:
-        get_id(): Returns the string representation of the user's ID for Flask-Login.
-    """
-    id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(50), nullable=False)
-    last_name = db.Column(db.String(50), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-    verified = db.Column(db.Boolean, default=False)
-    role = db.Column(db.String(20), default='client')  # 'client' or 'admin'
-    password = db.Column(db.String(255), nullable=False)
 
-    # One-to-many relationship with spaces and payments
-    spaces = db.relationship('Space', backref='user', lazy=True)
-    payments = db.relationship('Payment', backref='user', lazy=True)
-    reviews = db.relationship('Review', backref='user', lazy=True)
-
-    def get_id(self):
-        return str(self.id)  # Convert user ID to string for Flask-Login
 
 # ManageUser Model
 class ManageUser(db.Model):
