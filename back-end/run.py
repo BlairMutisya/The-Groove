@@ -99,3 +99,12 @@ class Payment(db.Model):
     contacts = db.Column(db.String(100), nullable=False)
     payment_mode = db.Column(db.String(50), nullable=False)
     message = db.Column(db.Text, nullable=True)
+
+class Review(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    space_id = db.Column(db.Integer, db.ForeignKey('space.id'), nullable=False)
+    review_message = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Integer, nullable=False)  # Rating in stars
+    user_first_name = db.Column(db.String(50), nullable=False)
+    user_last_name = db.Column(db.String(50), nullable=False)
