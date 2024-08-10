@@ -53,3 +53,20 @@ class User(UserMixin, db.Model):
     bookings = db.relationship('BookedSpace', backref='user', lazy=True)
     payments = db.relationship('Payment', backref='user', lazy=True)
     reviews = db.relationship('Review', backref='user', lazy=True)
+
+    def get_id(self):
+        return str(self.id)
+
+class Space(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Float, nullable=True)
+    price = db.Column(db.Float, nullable=False) 
+    status = db.Column(db.String(10), nullable=False)
+    image_url = db.Column(db.String(200), nullable=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    bookings = db.relationship('BookedSpace', backref='space', lazy=True)
+    reviews = db.relationship('Review', backref='space', lazy=True)
+    role = db.Column(db.String(20), default='admin')
