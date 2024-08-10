@@ -119,3 +119,8 @@ users = {
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
+
+# Function to generate confirmation token
+def generate_confirmation_token(email):
+    serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
+    return serializer.dumps(email, salt='email-confirm')
