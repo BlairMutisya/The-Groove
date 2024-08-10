@@ -431,3 +431,131 @@ def delete_space(id):
     db.session.delete(space)
     db.session.commit()
     return jsonify({'message': 'Space deleted successfully'}), 200
+
+# Booking CRUD operations
+@app.route('/bookings', methods=['POST'])
+@login_required
+def create_booking():
+    data = request.json
+    space_id = data.get('space_id')
+    # start_time = data.get('start_time')
+    # end_time = data.get('end_time')
+    user_first_name = data.get('user_first_name')
+    user_last_name = data.get('user_last_name')
+    email = data.get('email')
+    contact = data.get('contact')
+    space_name = data.get('space_name')
+    location = data.get('location')
+    image_url = data.get('image_url')
+    status = data.get('status')
+    paid = data.get('paid', False)
+
+    if not all([space_id,  user_first_name, user_last_name, email, contact]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    booking = BookedSpace(
+        user_id=current_user.id,
+        space_id=space_id,
+        user_first_name=user_first_name,
+        user_last_name=user_last_name,
+        email=email,
+        contact=contact,
+        space_name=space_name,
+        location=location,
+        image_url=image_url,
+        status=status,
+        paid=paid,
+        # start_time=datetime.fromisoformat(start_time),
+        # end_time=datetime.fromisoformat(end_time)
+    )
+
+    db.session.add(booking)
+    db.session.commit()
+    return jsonify({'message': 'Booking created successfully'}), 201
+
+@app.route('/bookings/<int:id>', methods=['GET'])
+@login_required
+def get_booking(id):
+    booking = BookedSpace.query.get_or_404(id)
+    return jsonify({
+        'id': booking.id,
+        'user_id': booking.user_id,
+        'space_id': booking.space_id,
+        'user_first_name': booking.user_first_name,
+        'user_last_name': booking.user_last_name,
+        'email': booking.email,
+        'contact': booking.contact,
+        'space_name': booking.space_name,
+        'location': booking.location,
+        'image_url': booking.image_url,
+        'status': booking.status,
+        'paid': booking.paid,
+        'start_time': booking.start_time.isoformat(),
+        'end_time': booking.end_time.isoformat()
+    }), 200
+
+@app.route('/bookings/<int:id>', methods=['DELETE'])
+@login_required
+def delete_booking(id):
+    booking = BookedSpace.query.get_or_404(id)
+    db.session.delete(booking)
+    db.session.commit()
+    return jsonify({'message': 'Booking deleted successfully'}), 200
+
+# Payment CRUD operations
+@app.route('/payments', methods=['POST'])
+@login_required
+def create_payment():
+    data = request.json
+    booking_id = data.get('booking_id')
+    amount = data.get('amount')
+    date_paid = data.get('date_paid')
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    contacts = data.get('contacts')
+    payment_mode = data.get('payment_mode')
+    message = data.get('message')
+
+    if not all([booking_id, amount, date_paid, first_name, last_name, contacts, payment_mode]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    payment = Payment(
+        user_id=current_user.id,
+        booking_id=booking_id,
+        amount=amount,
+        date_paid=datetime.fromisoformat(date_paid),
+        first_name=first_name,
+        last_name=last_name,
+        contacts=contacts,
+        payment_mode=payment_mode,
+        message=message
+    )
+
+    db.session.add(payment)
+    db.session.commit()
+    return jsonify({'message': 'Payment created successfully'}), 201
+
+@app.route('/payments/<int:id>', methods=['GET'])
+@login_required
+def get_payment(id):
+    payment = Payment.query.get_or_404(id)
+    return jsonify({
+        'id': payment.id,
+        'user_id': payment.user_id,
+        'booking_id': payment.booking_id,
+        'amount': payment.amount,
+        'date_paid': payment.date_paid.isoformat(),
+        'first_name': payment.first_name,
+        'last_name': payment.last_name,
+        'contacts': payment.contacts,
+        'payment_mode': payment.payment_mode,
+        'message': payment.message
+    }), 200
+
+@app.route('/payments/<int:id>', methods=['DELETE'])
+@login_required
+def delete_payment(id):
+    payment = Payment.query.get_or_404(id)
+    db.session.delete(payment)
+    db.session.commit()
+    return jsonify({'message': 'Payment deleted successfully'}), 200
