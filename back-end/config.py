@@ -36,3 +36,10 @@ SESSION_TYPE = 'filesystem'
 
 app.config['UPLOAD_FOLDER'] = 'uploads/'  # Directory to store uploaded images
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Maximum file size: 16MB
+
+# AWS S3 Configuration
+app.config['S3_BUCKET_NAME'] = os.getenv('S3_BUCKET_NAME')
+app.config['S3_REGION'] = os.getenv('S3_REGION')
+app.config['S3_ACCESS_KEY'] = os.getenv('AWS_ACCESS_KEY_ID')
+app.config['S3_SECRET_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
+
