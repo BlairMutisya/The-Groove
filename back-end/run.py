@@ -307,3 +307,39 @@ def login():
             }), 200
         else:
             return jsonify({'error': 'User not authenticated'}), 401
+
+
+# User Logout
+@app.route('/logout', methods=['POST'])
+@login_required
+def logout():
+    logout_user()
+    return jsonify({'message': 'Logout successful'}), 200
+
+# Middleware for JWT Authentication
+def jwt_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        try:
+            verify_jwt_in_request()
+            return fn(*args, **kwargs)
+        except Exception as e:
+            return jsonify({'error': str(e)}), 401
+    return wrapper
+
+# Admin Required Decorator
+def admin_required(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        # Check if the user is authenticated
+        if not current_user.is_authenticated:
+            return jsonify({'error': 'Authentication required'}), 401
+
+        # Check if the user has admin privileges
+        if current_user.role != 'admin':
+            return jsonify({'error': 'Admin access required'}), 403
+
+        # Call the wrapped function if all checks pass
+        return fn(*args, **kwargs)
+
+    return wrapper
