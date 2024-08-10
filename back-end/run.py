@@ -108,3 +108,14 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)  # Rating in stars
     user_first_name = db.Column(db.String(50), nullable=False)
     user_last_name = db.Column(db.String(50), nullable=False)
+
+# Define roles
+users = {
+    "admin_user": {"role": "admin"},
+    "regular_user": {"role": "user"}
+}
+
+# Load user callback for Flask-Login
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
