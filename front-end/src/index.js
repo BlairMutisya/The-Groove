@@ -6,11 +6,11 @@ import "./styles.css";
 import About from "./components/client/About";
 import SignUp from "./components/client/SignUp";
 import SignIn from "./components/client/SignIn";
-import Agents from './components/client/Agents';
-import Contact from './components/client/Contact';
-import SpaceDetails from './components/client/SpaceDetails';
+// import Agents from './components/client/Agents';
+// import Contact from './components/client/Contact';
+// import SpaceDetails from './components/client/SpaceDetails';
 import LandingPage from './components/client/LandingPage';
-import SpaceList from './components/client/SpaceList';
+// import SpaceList from './components/client/SpaceList';
 
 
 
@@ -24,22 +24,22 @@ const router = createBrowserRouter([
     path: "/about",
     element: <About />
   },
-  {
-    path: "/spacelist",
-    element: <SpaceList />
-  },
-  {
-    path:"/agents",
-    element:<Agents />
-  },
-  {
-    path:"/contact",
-    element:<Contact />
-  },
-  {
-    path:"/listing/details/:id",
-    element:<SpaceDetails />
-  },
+  // {
+  //   path: "/spacelist",
+  //   element: <SpaceList />
+  // },
+  // {
+  //   path:"/agents",
+  //   element:<Agents />
+  // },
+  // {
+  //   path:"/contact",
+  //   element:<Contact />
+  // },
+  // {
+  //   path:"/listing/details/:id",
+  //   element:<SpaceDetails />
+  // },
   {
     path: "/signup",
     element: <SignUp />,
