@@ -18,3 +18,21 @@ class Config:
     SQLALCHEMY_DATABASE_URI = 'sqlite:///app.db'  # Example URI for SQLite
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # Optional, but recommended to disable
     # Other configuration variables
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
+app.config['MAIL_PORT'] = int(os.getenv('MAIL_PORT'))
+app.config['MAIL_USE_TLS'] = os.getenv('MAIL_USE_TLS').lower() == 'true'
+app.config['MAIL_USE_SSL'] = os.getenv('MAIL_USE_SSL').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
+app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+app.config['MAIL_DEFAULT_SENDER'] = os.getenv('MAIL_DEFAULT_SENDER')
+app.config['MAIL_MAX_EMAILS'] = os.getenv('MAIL_MAX_EMAILS')
+app.config['MAIL_ASCII_ATTACHMENTS'] = os.getenv('MAIL_ASCII_ATTACHMENTS').lower() == 'true'
+SESSION_TYPE = 'filesystem'
+
+
+app.config['UPLOAD_FOLDER'] = 'uploads/'  # Directory to store uploaded images
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # Maximum file size: 16MB
