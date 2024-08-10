@@ -137,3 +137,77 @@ def confirm_token(token, expiration=3600):
     except (SignatureExpired, BadSignature):
         return False
     return email
+
+# Function to send confirmation email
+def send_confirmation_email(user):
+    token = generate_confirmation_token(user.email)
+    confirm_url = url_for('confirm_email', token=token, _external=True)
+    
+    html_body = f"""
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Email Verification</title>
+      <style>
+        body, html {{
+          font-family: Arial, sans-serif;
+          line-height: 1.6;
+          margin: 0;
+          padding: 0;
+        }}
+        .container {{
+          max-width: 600px;
+          margin: 20px auto;
+          padding: 20px;
+          background-color: #f9f9f9;
+          border-radius: 8px;
+          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }}
+        h2 {{
+          color: #333;
+          text-align: center;
+          margin-bottom: 20px;
+        }}
+        .btn {{
+          display: inline-block;
+          padding: 10px 20px;
+          background-color: #007bff;
+          color: #fff;
+          text-decoration: none;
+          border-radius: 5px;
+          text-align: center;
+        }}
+        p {{
+          color: #666;
+          font-size: 16px;
+          line-height: 1.8;
+          margin-bottom: 10px;
+        }}
+        .footer {{
+          margin-top: 20px;
+          text-align: center;
+          color: #999;
+        }}
+      </style>
+    </head>
+    <body>
+      <div class="container">
+        <h2>Email Verification</h2>
+        <p>Hi {user.first_name} {user.last_name},</p>
+        <p>Please click the button below to verify your email address:</p>
+        <a class="btn" href="{confirm_url}">Verify Email</a>
+        <p style="margin-top: 20px;">If you didn't request this, please ignore this email.</p>
+        <p class="footer">This email was sent to {user.email} from The Groove. </p>
+        <p class="footer">Please do not reply to this email.</p>
+      </div>
+    </body>
+    </html>
+    """
+    msg = Message('Kindly Confirm Your Email Address', 
+                  sender=("The Groove", app.config.get('MAIL_DEFAULT_SENDER', 'p6608665@gmail.com')),
+                  recipients=[user.email])
+    
+    msg.html = html_body
+    mail.send(msg)
