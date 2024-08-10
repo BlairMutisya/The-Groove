@@ -211,3 +211,35 @@ def send_confirmation_email(user):
     
     msg.html = html_body
     mail.send(msg)
+
+# Error handling
+@app.errorhandler(404)
+def not_found_error(error):
+    return jsonify({'error': 'Resource not found'}), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return jsonify({'error': 'Internal server error'}), 500
+
+@app.errorhandler(IntegrityError)
+def handle_integrity_error(error):
+    db.session.rollback()
+    return jsonify({'error': 'Integrity error, possibly a duplicate entry'}), 400
+
+@app.errorhandler(NoResultFound)
+def handle_no_result_found(error):
+    return jsonify({'error': 'No result found'}), 404
+
+# Route for email confirmation
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    email = confirm_token(token)
+    if email:
+        user = User.query.filter_by(email=email).first_or_404()
+        user.verified = True
+        db.session.commit()
+        flash('Email confirmed! You can now log in.', 'success')
+        return redirect(url_for('login'))
+    else:
+        flash('The confirmation link is invalid or has expired.', 'danger')
+        return redirect(url_for('login'))
