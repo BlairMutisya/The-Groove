@@ -243,3 +243,34 @@ def confirm_email(token):
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
         return redirect(url_for('login'))
+    
+# Homepage route
+@app.route('/')
+def home():
+    return ('Welcome to the Groove API'), 200
+# User Registration
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.json
+    first_name = data.get('first_name')
+    last_name = data.get('last_name')
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role', 'client')  # default role is 'client'
+
+    if not all([first_name, last_name, email, password]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    hashed_password = generate_password_hash(password)
+    user = User(first_name=first_name, last_name=last_name, email=email,
+                password=hashed_password, role=role)
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+        send_confirmation_email(user)
+        return jsonify({'message': 'User registered successfully, please check your email to confirm your address.'}), 201
+    except IntegrityError:
+        db.session.rollback()
+        return jsonify({'error': 'Email already registered'}), 400
+
