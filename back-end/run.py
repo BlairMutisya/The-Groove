@@ -29,3 +29,13 @@ app.config['MAIL_DEFAULT_SENDER'] = 'p6608665@gmail.com'
 app.config['SECRET_KEY'] = secrets.token_hex(16)
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['JWT_SECRET_KEY'] = secrets.token_hex(16)
+
+# Initialize extensions
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+mail = Mail(app)
+login_manager = LoginManager(app)
+login_manager.login_view = 'login'
+jwt = JWTManager(app)
+Session(app)
+CORS(app)
