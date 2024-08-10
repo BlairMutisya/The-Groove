@@ -343,3 +343,91 @@ def admin_required(fn):
         return fn(*args, **kwargs)
 
     return wrapper
+
+# Space CRUD operations
+@app.route('/spaces', methods=['GET'])
+def get_spaces():
+    spaces = Space.query.all()
+    return jsonify([{
+        'id': space.id,
+        'name': space.name,
+        'location': space.location,
+        'description': space.description,
+        'rating': space.rating,
+        'status': space.status,
+        'image_url': space.image_url,
+        'user_id': space.user_id
+    } for space in spaces]), 200
+
+@app.route('/spaces/<int:id>', methods=['GET'])
+def get_space(id):
+    space = Space.query.get_or_404(id)
+    return jsonify({
+        'id': space.id,
+        'name': space.name,
+        'location': space.location,
+        'description': space.description,
+        'price': space.price,  # Price in KSH
+        'rating': space.rating,
+        'status': space.status,
+        'image_url': space.image_url,
+        'user_id': space.user_id
+    }), 200
+
+
+@app.route('/spaces', methods=['POST'])
+# @admin_required
+def create_space():
+    data = request.json
+    name = data.get('name')
+    description = data.get('description')
+    location = data.get('location')
+    price = data.get('price')  # Ensure price is provided
+    image_url = data.get('image_url')
+    status = data.get('status')
+    rating = data.get('rating')
+    user_id = data.get('user_id')
+
+    if not all([name, description, location, price, status]):  # Include price in required fields
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    space = Space(
+        name=name,
+        description=description,
+        location=location,
+        price=price,
+        image_url=image_url,
+        status=status,
+        rating=rating,
+        user_id=user_id
+    )
+
+    db.session.add(space)
+    db.session.commit()
+    return jsonify({'message': 'Space created successfully'}), 201
+
+@app.route('/spaces/<int:id>', methods=['PUT'])
+@admin_required
+def update_space(id):
+    data = request.json
+    space = Space.query.get_or_404(id)
+    
+    space.name = data.get('name', space.name)
+    space.description = data.get('description', space.description)
+    space.location = data.get('location', space.location)
+    space.price = data.get('price', space.price)  # Update price if provided
+    space.image_url = data.get('image_url', space.image_url)
+    space.status = data.get('status', space.status)
+    space.rating = data.get('rating', space.rating)
+    
+    db.session.commit()
+    return jsonify({'message': 'Space updated successfully'}), 200
+
+
+@app.route('/spaces/<int:id>', methods=['DELETE'])
+@admin_required
+def delete_space(id):
+    space = Space.query.get_or_404(id)
+    db.session.delete(space)
+    db.session.commit()
+    return jsonify({'message': 'Space deleted successfully'}), 200
