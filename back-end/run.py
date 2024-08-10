@@ -559,3 +559,78 @@ def delete_payment(id):
     db.session.delete(payment)
     db.session.commit()
     return jsonify({'message': 'Payment deleted successfully'}), 200
+
+# Review CRUD operations
+# Create Review
+@app.route('/reviews', methods=['POST'])
+@login_required
+def create_review():
+    data = request.json
+    space_id = data.get('space_id')
+    review_message = data.get('review_message')
+    rating = data.get('rating')
+    user_first_name = data.get('user_first_name')
+    user_last_name = data.get('user_last_name')
+
+    if not all([space_id, review_message, rating, user_first_name, user_last_name]):
+        return jsonify({'error': 'Missing required fields'}), 400
+
+    review = Review(
+        user_id=current_user.id,
+        space_id=space_id,
+        review_message=review_message,
+        rating=rating,
+        user_first_name=user_first_name,
+        user_last_name=user_last_name
+    )
+
+    db.session.add(review)
+    db.session.commit()
+    return jsonify({'message': 'Review created successfully'}), 201
+
+# Get Review
+@app.route('/reviews/<int:id>', methods=['GET'])
+@login_required
+def get_review(id):
+    review = Review.query.get_or_404(id)
+    return jsonify({
+        'id': review.id,
+        'user_id': review.user_id,
+        'space_id': review.space_id,
+        'review_message': review.review_message,
+        'rating': review.rating,
+        'user_first_name': review.user_first_name,
+        'user_last_name': review.user_last_name
+    }), 200
+
+# Update Review
+@app.route('/reviews/<int:id>', methods=['PUT'])
+@login_required
+def update_review(id):
+    data = request.json
+    review = Review.query.get_or_404(id)
+    
+    if 'review_message' in data:
+        review.review_message = data['review_message']
+    if 'rating' in data:
+        review.rating = data['rating']
+    if 'user_first_name' in data:
+        review.user_first_name = data['user_first_name']
+    if 'user_last_name' in data:
+        review.user_last_name = data['user_last_name']
+
+    db.session.commit()
+    return jsonify({'message': 'Review updated successfully'}), 200
+
+# Delete Review
+@app.route('/reviews/<int:id>', methods=['DELETE'])
+@login_required
+def delete_review(id):
+    review = Review.query.get_or_404(id)
+    db.session.delete(review)
+    db.session.commit()
+    return jsonify({'message': 'Review deleted successfully'}), 200
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
