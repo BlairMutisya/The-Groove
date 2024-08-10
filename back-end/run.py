@@ -274,3 +274,36 @@ def register():
         db.session.rollback()
         return jsonify({'error': 'Email already registered'}), 400
 
+# User Login
+@app.route('/login', methods=['POST', 'GET'])
+
+def login():
+    if request.method == 'POST':
+        data = request.json
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return jsonify({'error': 'Missing email or password'}), 400
+
+        user = User.query.filter_by(email=email).first()
+        if user and check_password_hash(user.password, password):
+            if not user.verified:
+                return jsonify({'error': 'Email not verified'}), 400
+            login_user(user)
+            access_token = create_access_token(identity={'id': user.id, 'role': user.role})
+            return jsonify({'message': 'Login successful', 'access_token': access_token}), 200
+        else:
+            return jsonify({'error': 'Invalid email or password'}), 401
+
+    elif request.method == 'GET':
+        if current_user.is_authenticated:
+            return jsonify({
+                'id': current_user.id,
+                'first_name': current_user.first_name,
+                'last_name': current_user.last_name,
+                'email': current_user.email,
+                'role': current_user.role
+            }), 200
+        else:
+            return jsonify({'error': 'User not authenticated'}), 401
