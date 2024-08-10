@@ -243,7 +243,7 @@ def confirm_email(token):
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
         return redirect(url_for('login'))
-    
+
 # Homepage route
 @app.route('/')
 def home():
