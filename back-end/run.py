@@ -87,3 +87,15 @@ class BookedSpace(db.Model):
     paid = db.Column(db.Boolean, default=False)
     # start_time = db.Column(db.DateTime, nullable=False)
     # end_time = db.Column(db.DateTime, nullable=False)
+
+class Payment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date_paid = db.Column(db.DateTime, nullable=False)
+    space_id = db.Column(db.Integer, db.ForeignKey('space.id'), nullable=False)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    contacts = db.Column(db.String(100), nullable=False)
+    payment_mode = db.Column(db.String(50), nullable=False)
+    message = db.Column(db.Text, nullable=True)
