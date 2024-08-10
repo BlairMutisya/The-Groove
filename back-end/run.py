@@ -39,3 +39,17 @@ login_manager.login_view = 'login'
 jwt = JWTManager(app)
 Session(app)
 CORS(app)
+
+# Define models
+class User(UserMixin, db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(50), nullable=False)
+    last_name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(100), unique=True, nullable=False)
+    verified = db.Column(db.Boolean, default=False)
+    role = db.Column(db.String(10), nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    spaces = db.relationship('Space', backref='user', lazy=True)
+    bookings = db.relationship('BookedSpace', backref='user', lazy=True)
+    payments = db.relationship('Payment', backref='user', lazy=True)
+    reviews = db.relationship('Review', backref='user', lazy=True)
