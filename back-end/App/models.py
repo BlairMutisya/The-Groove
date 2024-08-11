@@ -76,18 +76,3 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)  # Rating in stars
     user_first_name = db.Column(db.String(50), nullable=False)
     user_last_name = db.Column(db.String(50), nullable=False)
-
-# Define the MpesaPayment model
-class MpesaPayment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    transaction_id = db.Column(db.String(100), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    callback_data = db.Column(db.JSON, nullable=True)
-    payment_mode = db.Column(db.String(50), default='M-Pesa')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    space_id = db.Column(db.Integer, db.ForeignKey('space.id'), nullable=True)
-    user = db.relationship('User', backref='mpesa_payments')
-    space = db.relationship('Space', backref='mpesa_payments')
