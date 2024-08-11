@@ -1,13 +1,16 @@
-import React from "react";
-import PaymentForm from "./components/PaymentForm";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import './styles.css'
 
-function App() {
-  return (
-    <div className="App">
-      <h1>Space Rental Payment</h1>
-      <PaymentForm />
-    </div>
-  );
+// Import your publishable key
+const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY
+
+if (!PUBLISHABLE_KEY) {
+  throw new Error("Missing Publishable Key")
 }
 
-export default App;
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+)
