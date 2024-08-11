@@ -14,11 +14,6 @@ from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, verify_jwt_in_request, get_jwt_identity
 from flask_cors import CORS
-from flask import Flask, request, jsonify
-import requests
-from requests.auth import HTTPBasicAuth
-import base64
-import datetime
 
 # Initialize the Flask app
 app = Flask(__name__)
@@ -44,10 +39,6 @@ login_manager.login_view = 'login'
 jwt = JWTManager(app)
 Session(app)
 CORS(app)
-
-# Your M-Pesa credentials
-CONSUMER_KEY = 'ktZASIWtjYYHlie0miqafpGbi69c0WtYRqaVGGTgchyDYutG'
-CONSUMER_SECRET = '1LLAwTN2wxh3AKSY6zwES8v33iYXPKZKeY3Nvo2wAF01mwcIfujtUsr2MDZgSCIT'
 
 # Define models
 class User(UserMixin, db.Model):
@@ -117,21 +108,6 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)  # Rating in stars
     user_first_name = db.Column(db.String(50), nullable=False)
     user_last_name = db.Column(db.String(50), nullable=False)
-
-class MpesaPayment(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    transaction_id = db.Column(db.String(100), unique=True, nullable=False)
-    phone_number = db.Column(db.String(20), nullable=False)
-    amount = db.Column(db.Float, nullable=False)
-    date = db.Column(db.DateTime, nullable=False)
-    status = db.Column(db.String(50), nullable=False)
-    callback_data = db.Column(db.JSON, nullable=True)
-    payment_mode = db.Column(db.String(50), default='M-Pesa')
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
-    space_id = db.Column(db.Integer, db.ForeignKey('space.id'), nullable=True)
-    user = db.relationship('User', backref='mpesa_payments')
-    space = db.relationship('Space', backref='mpesa_payments')
-
 
 # Define roles
 users = {
@@ -235,66 +211,6 @@ def send_confirmation_email(user):
     
     msg.html = html_body
     mail.send(msg)
-
-def generate_token():
-    api_url = "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials"
-    response = requests.get(api_url, auth=HTTPBasicAuth(CONSUMER_KEY, CONSUMER_SECRET))
-    token = response.json().get('access_token')
-    return token
-
-@app.route('/token', methods=['GET'])
-def get_token():
-    token = generate_token()
-    return jsonify({'access_token': token})
-
-@app.route('/pay', methods=['POST'])
-def lipa_na_mpesa_online():
-    data = request.get_json()
-
-    phone_number = data.get('phoneNumber')
-    amount = data.get('amount')
-
-    if not phone_number or not amount:
-        return jsonify({'error': 'Phone number and amount are required'}), 400
-
-    try:
-        token = generate_token()
-        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-        headers = {"Authorization": f"Bearer {token}"}
-
-        business_short_code = "174379"
-        passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2d7f8e68d9c4c2bb0b15b6df82d1b129"
-        timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-        password = base64.b64encode(f"{business_short_code}{passkey}{timestamp}".encode()).decode('utf-8')
-
-        payload = {
-            "BusinessShortCode": business_short_code,
-            "Password": password,
-            "Timestamp": timestamp,
-            "TransactionType": "CustomerPayBillOnline",
-            "Amount": amount,
-            "PartyA": phone_number,
-            "PartyB": business_short_code,
-            "PhoneNumber": phone_number,
-            "CallBackURL": "https://your_callback_url.com/callback",
-            "AccountReference": "SpaceRental",
-            "TransactionDesc": "Payment for space rental"
-        }
-
-        response = requests.post(api_url, json=payload, headers=headers)
-        return jsonify(response.json())
-
-    except requests.exceptions.RequestException as e:
-        return jsonify({'error': str(e)}), 500
-
-
-@app.route('/callback', methods=['POST'])
-def mpesa_callback():
-    data = request.get_json()
-    # Process the callback data here, e.g., verify payment, update database, etc.
-    print("Callback received: ", data)
-    return jsonify({"ResultCode": 0, "ResultDesc": "Accepted"})
-
 
 # Error handling
 @app.errorhandler(404)
