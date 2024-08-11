@@ -16,7 +16,6 @@ import SpaceList from './components/client/SpaceList';
 
 const PUBLISHABLE_KEY = "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ"
 const router = createBrowserRouter([
-
   {
     path: "/",
     element: <LandingPage />
