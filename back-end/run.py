@@ -118,6 +118,21 @@ class Review(db.Model):
     user_first_name = db.Column(db.String(50), nullable=False)
     user_last_name = db.Column(db.String(50), nullable=False)
 
+class MpesaPayment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    transaction_id = db.Column(db.String(100), unique=True, nullable=False)
+    phone_number = db.Column(db.String(20), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    date = db.Column(db.DateTime, nullable=False)
+    status = db.Column(db.String(50), nullable=False)
+    callback_data = db.Column(db.JSON, nullable=True)
+    payment_mode = db.Column(db.String(50), default='M-Pesa')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+    space_id = db.Column(db.Integer, db.ForeignKey('space.id'), nullable=True)
+    user = db.relationship('User', backref='mpesa_payments')
+    space = db.relationship('Space', backref='mpesa_payments')
+
+
 # Define roles
 users = {
     "admin_user": {"role": "admin"},
@@ -236,41 +251,42 @@ def get_token():
 def lipa_na_mpesa_online():
     data = request.get_json()
 
-    # Extract data from the request
     phone_number = data.get('phoneNumber')
     amount = data.get('amount')
 
-    # Generate token
-    token = generate_token()
+    if not phone_number or not amount:
+        return jsonify({'error': 'Phone number and amount are required'}), 400
 
-    # Prepare API request
-    api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
-    headers = {"Authorization": "Bearer %s" % token}
+    try:
+        token = generate_token()
+        api_url = "https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest"
+        headers = {"Authorization": f"Bearer {token}"}
 
-    # Prepare password (BusinessShortCode + Passkey + Timestamp)
-    business_short_code = "174379"  # Sandbox Business Shortcode
-    passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2d7f8e68d9c4c2bb0b15b6df82d1b129"
-    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    password = base64.b64encode(f"{business_short_code}{passkey}{timestamp}".encode()).decode('utf-8')
+        business_short_code = "174379"
+        passkey = "bfb279f9aa9bdbcf158e97dd71a467cd2d7f8e68d9c4c2bb0b15b6df82d1b129"
+        timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+        password = base64.b64encode(f"{business_short_code}{passkey}{timestamp}".encode()).decode('utf-8')
 
-    # Prepare payload
-    payload = {
-        "BusinessShortCode": business_short_code,
-        "Password": password,
-        "Timestamp": timestamp,
-        "TransactionType": "CustomerPayBillOnline",
-        "Amount": amount,
-        "PartyA": phone_number,
-        "PartyB": business_short_code,
-        "PhoneNumber": phone_number,
-        "CallBackURL": "https://your_callback_url.com/callback",  # Replace with your actual callback URL
-        "AccountReference": "SpaceRental",
-        "TransactionDesc": "Payment for space rental"
-    }
+        payload = {
+            "BusinessShortCode": business_short_code,
+            "Password": password,
+            "Timestamp": timestamp,
+            "TransactionType": "CustomerPayBillOnline",
+            "Amount": amount,
+            "PartyA": phone_number,
+            "PartyB": business_short_code,
+            "PhoneNumber": phone_number,
+            "CallBackURL": "https://your_callback_url.com/callback",
+            "AccountReference": "SpaceRental",
+            "TransactionDesc": "Payment for space rental"
+        }
 
-    response = requests.post(api_url, json=payload, headers=headers)
+        response = requests.post(api_url, json=payload, headers=headers)
+        return jsonify(response.json())
 
-    return jsonify(response.json())
+    except requests.exceptions.RequestException as e:
+        return jsonify({'error': str(e)}), 500
+
 
 @app.route('/callback', methods=['POST'])
 def mpesa_callback():
