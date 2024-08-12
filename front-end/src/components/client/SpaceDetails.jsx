@@ -29,7 +29,7 @@ const SpaceDetails = () => {
       fetchProduct();
     }, [id]);
   
-    if (loading) return <div className='flex justify-center text-2xl'>Loading...</div>;
+   
     if (error) return <div>Error: {error}</div>;
 
   return (
