@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaLinkedin, FaTwitter, FaGlobe } from 'react-icons/fa'; // Importing the required icons
 import Footer from './Footer';
+import {Link} from 'react-router-dom';
 
 const agents = [
   {
@@ -44,8 +45,12 @@ const Agents = () => {
         <h2 className="text-3xl font-extrabold text-gray-900 ">Meet our team</h2>
         <p className="mt-2 text-gray-600">At The-Groove, our dedicated agents are the heart of our service, bringing unparalleled expertise and a personalized touch to every rental experience. Our agents are committed to guiding you through the entire process, from discovering your ideal space to securing the perfect lease.</p>
        <div className="mt-4 flex justify-center space-x-4"> 
+      <Link to="/about">
       <button className="bg-purple-600 text-white px-4 py-2 rounded-md">About us</button>
+      </Link >
+      <Link to="/Bookings">
       <button className="bg-purple-600 px-4 py-2 rounded-md text-white">Book a space</button>
+      </Link>
       </div>
       </div>
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-8"> 

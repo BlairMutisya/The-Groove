@@ -11,42 +11,82 @@ import Contact from './components/client/Contact';
 import SpaceDetails from './components/client/SpaceDetails';
 import LandingPage from './components/client/LandingPage';
 import SpaceList from './components/client/SpaceList';
+import Navbar from './components/client/Navbar';
 
+const PUBLISHABLE_KEY = "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ";
 
-
-const PUBLISHABLE_KEY = "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ"
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />
-  }, 
+    element: (
+      <div>
+        <Navbar />
+        <LandingPage />
+      </div>
+    ),
+  },
   {
     path: "/about",
-    element: <About />
+    element: (
+      <div>
+        <Navbar />
+        <About />
+      </div>
+    ),
   },
   {
     path: "/spacelist",
-    element: <SpaceList />
+    element: (
+      <div>
+        <Navbar />
+        <SpaceList />
+      </div>
+    ),
   },
   {
-    path:"/agents",
-    element:<Agents />
+    path: "/agents",
+    element: (
+      <div>
+        <Navbar />
+        <Agents />
+      </div>
+    ),
   },
   {
-    path:"/contact",
-    element:<Contact />
+    path: "/contact",
+    element: (
+      <div>
+        <Navbar />
+        <Contact />
+      </div>
+    ),
   },
   {
-    path:"/listing/details/:id",
-    element:<SpaceDetails />
+    path: "/listing/details/:id",
+    element: (
+      <div>
+        <Navbar />
+        <SpaceDetails />
+      </div>
+    ),
   },
   {
     path: "/signup",
-    element: <SignUp />,
+    element: (
+      <div>
+        <Navbar />
+        <SignUp />
+      </div>
+    ),
   },
   {
     path: "/signin",
-    element: <SignIn />,
+    element: (
+      <div>
+        <Navbar />
+        <SignIn />
+      </div>
+    ),
   }
 ]);
 
