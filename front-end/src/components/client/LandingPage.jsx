@@ -36,7 +36,7 @@ const LandingPage = () => {
   return (
     <div>
 
-      <Navbar />
+      {/* <Navbar /> */}
       <div name='home' className='h-full w-full bg-[#FFF3e5]'>
         <div className='w-full -mx-4 flex h-full px-4  md:flex-row'>
           <div className='flex flex-col bg-[#FCE8CF] h-screen px-20 mr-2'>
@@ -81,8 +81,8 @@ const LandingPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
 
             {products.slice(0, 4).map((product) => (
-              <div className='border-slate-950 border-b-2'>
-                <div key={product.id} className="flex bg-[#fff3e5] p-4 mb-8 ">
+            //   <div className='border-slate-950 border-b-2'>
+                <div key={product.id} className='border-slate-950 border-b-2'> 
                   <div className="w-[250px]">
                     <img className="rounded-lg w-full h-48 object-cover" src={product.image} alt={product.title} />
                   </div>
@@ -107,7 +107,7 @@ const LandingPage = () => {
                     
                   </div>
                 </div>
-              </div>
+            //   </div>
 
             ))}
 
@@ -159,7 +159,7 @@ const LandingPage = () => {
         </div>
 
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
 
   )
