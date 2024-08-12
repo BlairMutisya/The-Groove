@@ -19,7 +19,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False  # Optional, but recommended to disable
     # Other configuration variables
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('SQLALCHEMY_DATABASE_URI')
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = os.getenv('MAIL_SERVER')
@@ -43,10 +43,10 @@ app.config['S3_REGION'] = os.getenv('S3_REGION')
 app.config['S3_ACCESS_KEY'] = os.getenv('AWS_ACCESS_KEY_ID')
 app.config['S3_SECRET_KEY'] = os.getenv('AWS_SECRET_ACCESS_KEY')
 
+
 # Setup the Flask-JWT-Extended extension
 app.config["JWT_SECRET_KEY"] = os.getenv('JWT_SECTET_KEY')
 jwt = JWTManager(app)
 
 
 # Session(app)
-
