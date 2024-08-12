@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
-import Footer from './Footer';
+import Footer from '../client/Footer';
 import { Link } from 'react-router-dom';
 
 const apiUrl = 'https://fakestoreapi.com/products';
