@@ -1,5 +1,4 @@
 import React from 'react'
-import { PiCopyright } from "react-icons/pi";
 import { LiaWhatsapp } from "react-icons/lia";
 import { PiFigmaLogoLight } from "react-icons/pi";
 import { PiYoutubeLogoLight } from "react-icons/pi";
@@ -7,68 +6,97 @@ import { CiFacebook } from "react-icons/ci";
 
 const Footer = () => {
     return (
-        <div className='bg-[#fff3e5]'>
-
-            <div>
-
-                <div className='flex justify-center items-center space-x-52'>
-
-                    <div>
-                        <h1 className='text-2xl font-bold ml-4'>The</h1>
-                        <h1 className='text-2xl font-bold'>Groove</h1>
-                        <div className='mt-32 mb-8'>
-                            <p>(+254)758 012 249</p>
-                            <p>info@The.Groove.co.ke</p>
-                        </div>
-
-                    </div>
-
-                    <div>
-                        <h1 className='font-bold ml-24'>Address</h1>
-                        <div className='mt-32 mb-8'>
-                            <p className='ml-14'>P.O.BOX 10253-00400</p>
-                            <p>4th Floor Royal Offices, Mogotio Road,</p>
-                            <p className='ml-12'>Westlands,Nairobi,Kenya</p>
-                        </div>
-
-                    </div>
-
-                    <div>
-                        <h1 className='font-bold mt-5'>Quick Links</h1>
-                        <div className='mt-32 mb-8'>
-                            <ul>
-                                <li>Home</li>
-                                <li>About</li>
-                                <li>listings</li>
-                                <li>Terms and Conditions</li>
-                            </ul>
-                        </div>
-
-                    </div>
-
+        <footer className="bg-[#FAE5D3] py-12">
+            <div className="max-w-screen-lg mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Company Info */}
+                <div>
+                    <h3 className="text-2xl font-bold mb-4">The Groove</h3>
+                    <p className="text-gray-700">(+254) 758 012 249</p>
+                    <p className="text-gray-700">info@The-Groove.co.ke</p>
                 </div>
 
-                <div className='mt-8 mb-11 flex'>
-                    <div className='flex ml-20 mb-8 mt-5'>
-                        <PiCopyright className='mt-1'/>
-                        <p className='mb-11'> 2024 The Groove. All Rights Reserved.</p>
-                    </div>
-
-                    <div className='mt-1 ml-[500px]'>
-                        <p className='font-semibold'>Follow Us</p>
-                        <div className='flex space-x-4 mt-3'>
-                        <CiFacebook />
-                        <PiYoutubeLogoLight />
-                        <PiFigmaLogoLight />
-                        <LiaWhatsapp />
-                        </div>
-                    </div>
-                  
+                {/* Address */}
+                <div>
+                    <h3 className="text-2xl font-bold mb-4">Address</h3>
+                    <p className="text-gray-700">P.O.BOX 10253-00400</p>
+                    <p className="text-gray-700">
+                        4th Floor Royal Offices, 26 Mogotio Road, Westlands, Nairobi,
+                        Kenya
+                    </p>
                 </div>
 
+                {/* Quick Links */}
+                <div>
+                    <h3 className="text-2xl font-bold mb-4">Quick Links</h3>
+                    <ul className="space-y-2">
+                        <li>
+                            <a
+                                href="/"
+                                className="text-gray-700 hover:text-purple-700 transition"
+                            >
+                                Home
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="/about"
+                                className="text-gray-700 hover:text-purple-700 transition"
+                            >
+                                About
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="/listing"
+                                className="text-gray-700 hover:text-purple-700 transition"
+                            >
+                                Listing
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                href="/agents"
+                                className="text-gray-700 hover:text-purple-700 transition"
+                            >
+                                Agents 
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
-        </div>
+            <div className="max-w-screen-lg mx-auto px-4 mt-8 flex justify-between items-center">
+                <p className="text-gray-600">
+                    © 2024 The Groove. All Rights Reserved.
+                </p>
+                <div className="flex space-x-4">
+                    <a
+                        href="#"
+                        className="text-gray-700 hover:text-purple-700 transition"
+                    >
+                        <CiFacebook />
+                    </a>
+                    <a
+                        href="#"
+                        className="text-gray-700 hover:text-purple-700 transition"
+                    >
+                        <PiYoutubeLogoLight />
+                    </a>
+                    <a
+                        href="#"
+                        className="text-gray-700 hover:text-purple-700 transition"
+                    >
+                        <PiFigmaLogoLight />
+                    </a>
+                    <a
+                        href="#"
+                        className="text-gray-700 hover:text-purple-700 transition"
+                    >
+                        <LiaWhatsapp />
+                    </a>
+                </div>
+            </div>
+        </footer>
     )
 }
 
