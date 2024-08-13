@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager, create_access_token, verify_jwt_in_request, get_jwt_identity
 from flask_cors import CORS
-
+import re
 # Initialize the Flask app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -115,7 +115,7 @@ users = {
     "regular_user": {"role": "user"}
 }
 
-# Load user callback for Flask-Login
+  # Load user callback for Flask-Login
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
@@ -249,7 +249,20 @@ def confirm_email(token):
 def home():
     return ('Welcome to the Groove API'), 200
 # User Registration
+def validate_password(password):
+    if len(password) < 8:
+        return "Password must be atleast 8 characters long."
+    if not re.search(r'[A-Z]', password):
+       return "Password must have at least one uppercase letter."
+    if not re.search(r'[a-z]', password):
+        return "Password must have at least one lowercase letter."
+    if not re.search(r'[0-9]', password):
+        return "Password must contain at least one digit."
+    if not re.search(r'[\W_]', password):
+        return "Password must contain at least one special character."
+    return None
 @app.route('/register', methods=['POST'])
+
 def register():
     data = request.json
     first_name = data.get('first_name')
@@ -260,6 +273,10 @@ def register():
 
     if not all([first_name, last_name, email, password]):
         return jsonify({'error': 'Missing required fields'}), 400
+   #validate password
+    password_error = validate_password(password)
+    if password_error:
+      return jsonify({'error': password_error}), 400
 
     hashed_password = generate_password_hash(password)
     user = User(first_name=first_name, last_name=last_name, email=email,

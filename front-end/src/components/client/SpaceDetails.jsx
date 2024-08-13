@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Footer from '../client/Footer';
 
-const apiUrl = 'https://fakestoreapi.com/products';
+const apiUrl = 'http://127.0.0.1:5000/spaces';
 
 const SpaceDetails = () => {
     const { id } = useParams();

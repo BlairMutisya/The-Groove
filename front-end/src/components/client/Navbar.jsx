@@ -7,7 +7,7 @@ const Navbar = () => {
     return (
         <header>
 
-            <div name='navbar' className='flex justify-between items-center w-full h-14 fixed text-black px-4 bg-[#FCE8CF] shadow-md p-8'>
+            <div name='navbar' className='flex justify-between items-center w-full h-14  text-black px-4 bg-[#FCE8CF] shadow-md p-8'>
                 <div>
                     <h1 className='text-4xl font-signature ml-2'>The Groove</h1>
                 </div>
