@@ -67,8 +67,8 @@ class Space(db.Model):
     status = db.Column(db.String(10), nullable=False)
     image_url = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    bookings = db.relationship('BookedSpace', backref='space', lazy=True)
-    reviews = db.relationship('Review', backref='space', lazy=True)
+    # bookings = db.relationship('BookedSpace', backref='space', lazy=True)
+    # reviews = db.relationship('Review', backref='space', lazy=True)
     role = db.Column(db.String(20), default='admin')
 
 class BookedSpace(db.Model):
@@ -380,26 +380,28 @@ def get_space(id):
 def create_space():
     data = request.json
     name = data.get('name')
-    description = data.get('description')
     location = data.get('location')
-    price = data.get('price')  # Ensure price is provided
-    image_url = data.get('image_url')
-    status = data.get('status')
+    description = data.get('description')
     rating = data.get('rating')
+    price = data.get('price') 
+    status = data.get('status')
+    image_url = data.get('image_url')
     user_id = data.get('user_id')
+    role = data.get('role') or " "
 
     if not all([name, description, location, price, status]):  # Include price in required fields
         return jsonify({'error': 'Missing required fields'}), 400
 
     space = Space(
         name=name,
-        description=description,
         location=location,
-        price=price,
-        image_url=image_url,
-        status=status,
+        description=description,
         rating=rating,
-        user_id=user_id
+        price=price,
+        status=status,
+        image_url=image_url,
+        user_id=user_id,
+        role=role  # Assume the role is provided by the user during booking creation, not stored in the database. 
     )
 
     db.session.add(space)

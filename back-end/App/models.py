@@ -31,8 +31,8 @@ class Space(db.Model):
     status = db.Column(db.String(10), nullable=False)
     image_url = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    bookings = db.relationship('BookedSpace', backref='space', lazy=True)
-    reviews = db.relationship('Review', backref='space', lazy=True)
+    # bookings = db.relationship('BookedSpace', backref='space', lazy=True)
+    # reviews = db.relationship('Review', backref='space', lazy=True)
     role = db.Column(db.String(20), default='admin')
 
 # Define the BookedSpace model
