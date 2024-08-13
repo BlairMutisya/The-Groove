@@ -8,7 +8,6 @@ const apiUrl = 'https://fakestoreapi.com/products';
 const SpaceList = () => {
     // const isBooked = product.isBooked;
     const [products, setProducts] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [selectedProduct, setSelectedProduct] = useState(null);
 
@@ -28,18 +27,15 @@ const SpaceList = () => {
                 setProducts(data);
             } catch (error) {
                 setError(error.message);
-            } finally {
-                setLoading(false);
             }
         };
 
         fetchData();
     }, []);
 
-    if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
 
-    //   return (
+      return (
     <div name='spacelist'>
         <Navbar className='navbar' />
         <div className='pt-20 bg-[#fff3e5]'>
@@ -78,7 +74,7 @@ const SpaceList = () => {
                                 </div>
                                 <div className='mt-11 flex space-x-24'>
                                     <p className='bg-white'>{product.price}</p>
-                                    <Link to={`/listing/details/${product.id}`} className='text-white bg-[#4a8cb8] rounded-lg px-4 py-2 hover:bg-[#79a9c2] transition duration-300'>view space</Link>
+                                    <Link to={`/spacedetails/${product.id}`} className='text-white bg-[#4a8cb8] rounded-lg px-4 py-2 hover:bg-[#79a9c2] transition duration-300'>view space</Link>
                                 </div>
                             </div>
                         </div>
@@ -89,7 +85,7 @@ const SpaceList = () => {
             <Footer />
         </div>
     </div>
-
+      )
 }
 
 export default SpaceList

@@ -5,15 +5,15 @@ const About = () => {
   return (
     <div className="bg-[#FAE5D3] text-black font-sans">
       {/* Top Section */}
-      <div className="max-w-screen-lg mx-auto py-16 px-4 flex flex-col md:flex-row items-center">
-        <div className="md:w-1/2 mb-8 md:mb-0">
+      <div className="max-w-screen-lg mx-auto py-16 px-9 flex flex-col md:flex-row items-center -ml-1">
+        <div className="md:w-1/2 mb-8 md:mb-0 -ml-0 mt-9">
           <img
             src="https://i.pinimg.com/474x/95/2f/44/952f44eaca237055954b696e3b607808.jpg"
             alt="Office Space"
             className="w-full rounded-lg shadow-lg"
           />
         </div>
-        <div className="md:w-1/2 md:pl-12 text-center md:text-left">
+        <div className="md:w-1/2 md:pl-12 text-center md:text-left -mt-18">
           <h3 className="text-xl font-bold text-purple-700">ABOUT US</h3>
           <h2 className="text-4xl font-bold mt-4 mb-6">
             We are The Best Space Renting Company
@@ -24,19 +24,26 @@ const About = () => {
             planning a corporate meeting, hosting a private event, or looking
             for a versatile space for a creative project, we've got you covered.
           </p>
-          <button className="bg-purple-700 text-white px-6 py-3 rounded-full shadow hover:bg-purple-800 transition duration-300">
+          <h3 className="text-4xl font-bold mt-4 mb-6">Our Mission</h3>
+          <p className="text-lg mb-6">
+            Our mission is to deliver outstanding spaces that enhance every
+            event and project. We understand that finding the right venue can
+            make all the difference, whether it's for a corporate gathering, a
+            private celebration, or a creative endeavor.
+          </p>
+          <button className="bg-[#79a9c2] text-white px-6 py-3 rounded-full shadow hover:bg-[#5299be] transition duration-300">
             More About Us
           </button>
         </div>
       </div>
 
       {/* Facts Section */}
-      <div className="relative bg-white py-16">
+      <div className="relative bg-white py-18 h-full ">
         {/* Image Placeholder */}
         <img
           src="https://i.pinimg.com/474x/75/bb/7a/75bb7ad43a5ce65090276c92d976f863.jpg"
           alt="Background"
-          className="absolute inset-0 w-full h-full object-cover opacity-30"
+          className="absolute inset-0 w-full h-full object-cover opacity-50"
         />
 
         <div
@@ -113,10 +120,10 @@ const About = () => {
               </li>
               <li>
                 <a
-                  href="/listings"
+                  href="/spacelist"
                   className="text-gray-700 hover:text-purple-700 transition"
                 >
-                  Listings
+                  SpaceList
                 </a>
               </li>
               <li>
