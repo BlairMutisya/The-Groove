@@ -8,19 +8,19 @@ const agents = [
     name: 'Blair Vullu',
     position: 'Founder & CEO',
     description: 'Co-founder of the company. The-Groove.',
-    image: 'https://via.placeholder.com/150',
+    image: 'Blair.PNG',
   },
   {
     name: 'Uvyne Rop',
     position: 'Team-manager',
     description: 'Oversee daily operations and ensure customer satisfaction.',
-    image: 'https://via.placeholder.com/150',
+    image: 'Rop.PNG',
   },
   {
     name: 'Robert Gathanua',
     position: 'Finance Manager',
     description: 'Ensure compliance with financial regulations and standards.',
-    image: 'https://via.placeholder.com/150',
+    image: 'Robert Gathanua.PNG',
   },
   {
     name: 'Liz Zawadi',
@@ -32,7 +32,7 @@ const agents = [
     name: 'Victor Muriithi',
     position: 'Customer Service Lead',
     description: 'Lead customer service operations and support processes.',
-    image: 'https://via.placeholder.com/150',
+    image: 'Victor Muriithi.PNG',
   },
 ];
 
