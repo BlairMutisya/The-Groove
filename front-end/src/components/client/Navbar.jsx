@@ -4,8 +4,7 @@ import {Link, NavLink, useNavigate } from "react-router-dom";
 import { VscAccount } from 'react-icons/vsc';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import SpaceList from './SpaceList';
-
+import SpaceList from "./SpaceList";
 
 const Navbar = () => {
   const [navOpen, setNavOpen] = useState(false);
@@ -76,7 +75,7 @@ const handleLogout = () => {
             {/* Dropdown Menu */}
             <li className="relative">
               <div className="flex items-center" onClick={toggleDropdown}>
-                <span>Account</span>
+                {/* <span>Account</span> */}
                 <MdOutlineKeyboardArrowDown size={24} className="ml-2" />
               </div>
 

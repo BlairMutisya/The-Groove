@@ -300,7 +300,7 @@ def register():
         return jsonify({'error': 'Email already registered'}), 400
 
 # User Login
-@app.route('/login', methods=['POST', 'GET'])
+@app.route('/signin', methods=['POST', 'GET'])
 
 def login():
     if request.method == 'POST':
@@ -656,6 +656,23 @@ def delete_review(id):
     db.session.commit()
     return jsonify({'message': 'Review deleted successfully'}), 200
 
+@app.route('/contact', methods=['POST'])
+@login_required
+def create_contact():
+    data = request.get_json()
+
+    # Create a new contact entry
+    new_contact = Contact(
+        name=data['name'],
+        email=data['email'],
+        phone=data.get('phone'),
+        message=data['message']
+    )
+
+    db.session.add(new_contact)
+    db.session.commit()
+
+    return jsonify({"message": "Contact form submitted successfully!"}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

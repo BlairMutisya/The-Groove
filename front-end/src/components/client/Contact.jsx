@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Navbar from "./Navbar"; // Adjust the path as necessary
 import Footer from "./Footer"; // Adjust the path as necessary
 
+// const apiUrl = "https//localhost:5000";
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -150,6 +152,8 @@ const Contact = () => {
                 <textarea
                   id="message"
                   name="message"
+                  value={formData.message}
+                  onChange={handleChange}
                   rows="4"
                   value={formData.message}
                   onChange={handleChange}

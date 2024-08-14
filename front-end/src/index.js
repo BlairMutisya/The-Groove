@@ -78,7 +78,6 @@ const router = createBrowserRouter([
     path: "/signup",
     element: (
       <div>
-        <Navbar />
         <SignUp />
       </div>
     ),
@@ -87,7 +86,6 @@ const router = createBrowserRouter([
     path: "/signin",
     element: (
       <div>
-        <Navbar />
         <SignIn />
       </div>
     ),
