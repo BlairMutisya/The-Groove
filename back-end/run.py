@@ -35,7 +35,7 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 mail = Mail(app)
 login_manager = LoginManager(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'signin'
 jwt = JWTManager(app)
 Session(app)
 CORS(app)
@@ -246,10 +246,10 @@ def confirm_email(token):
         user.verified = True
         db.session.commit()
         flash('Email confirmed! You can now log in.', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('signin'))
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
-        return redirect(url_for('login'))
+        return redirect(url_for('signin'))
 
 # Homepage route
 @app.route('/')

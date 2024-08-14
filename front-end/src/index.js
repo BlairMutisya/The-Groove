@@ -16,6 +16,7 @@ import AdminSignIn from "./components/admin/SignIn";
 import AddSpace from "./components/admin/AddSpace";
 import ManageUsers from "./components/admin/ManageUsers";
 import ViewSpace from "./components/admin/ViewSpace";
+import Dashboard from "./components/admin/Dashboard";
 
 // const PUBLISHABLE_KEY =
 //   "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ";
@@ -91,7 +92,7 @@ const router = createBrowserRouter([
       </div>
     ),
   },
-    {
+  {
     path: "/adminsignin",
     element: (
       <div>
@@ -103,7 +104,6 @@ const router = createBrowserRouter([
     path: "/AddSpace",
     element: (
       <div>
-       
         <AddSpace />
       </div>
     ),
@@ -112,7 +112,6 @@ const router = createBrowserRouter([
     path: "/MangeUsers",
     element: (
       <div>
-       
         <ManageUsers />
       </div>
     ),
@@ -121,8 +120,15 @@ const router = createBrowserRouter([
     path: "/ViewSpace",
     element: (
       <div>
-       
         <ViewSpace />
+      </div>
+    ),
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <div>
+        <Dashboard />
       </div>
     ),
   },
