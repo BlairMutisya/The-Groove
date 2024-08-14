@@ -12,6 +12,7 @@ import SpaceDetails from "./components/client/SpaceDetails";
 import LandingPage from "./components/client/LandingPage";
 import SpaceList from "./components/client/SpaceList";
 import Navbar from "./components/client/Navbar";
+import AdminSignIn from "./components/admin/SignIn";
 import AddSpace from "./components/admin/AddSpace";
 import ManageUsers from "./components/admin/ManageUsers";
 import ViewSpace from "./components/admin/ViewSpace";
@@ -87,6 +88,14 @@ const router = createBrowserRouter([
     element: (
       <div>
         <SignIn />
+      </div>
+    ),
+  },
+    {
+    path: "/adminsignin",
+    element: (
+      <div>
+        <AdminSignIn />
       </div>
     ),
   },

@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import Footer from '../client/Footer';
 import Navbar from '../client/Navbar'
 
-const apiUrl = 'http://127.0.0.1:5000/spaces';
+const apiUrl = "https://fakestoreapi.com/products";
 
 const SpaceDetails = () => {
     const { id } = useParams();

@@ -3,23 +3,14 @@ import { MdOutlineKeyboardArrowRight } from "react-icons/md";
 
 function SignUp() {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
+    first_name: "",
+    last_name: "", 
     email: "",
     password: "",
-    // confirmPassword: "",
     role: "client", // Default role
   });
 
-  const [errors, setErrors] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    // confirmPassword: "",
-    role: "client",
-  });
-
+  const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState("");
 
   const handleChange = (e) => {
@@ -34,13 +25,13 @@ function SignUp() {
     let isValid = true;
     const newErrors = {};
 
-    if (!formData.firstName) {
-      newErrors.firstName = "First name is required";
+    if (!formData.first_name) {
+      newErrors.first_name = "First name is required";
       isValid = false;
     }
 
-    if (!formData.lastName) {
-      newErrors.lastName = "Last name is required";
+    if (!formData.last_name) {
+      newErrors.last_name = "Last name is required";
       isValid = false;
     }
 
@@ -60,11 +51,6 @@ function SignUp() {
       isValid = false;
     }
 
-    if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      isValid = false;
-    }
-
     setErrors(newErrors);
     return isValid;
   };
@@ -76,13 +62,7 @@ function SignUp() {
         const response = await fetch("http://localhost:5000/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            email: formData.email,
-            password: formData.password,
-            role: formData.role, // Include role in the request body
-          }),
+          body: JSON.stringify(formData), // Send formData as is
         });
 
         const data = await response.json();
@@ -96,7 +76,7 @@ function SignUp() {
           console.error("Registration failed:", data);
           setErrors((prevErrors) => ({
             ...prevErrors,
-            backend: data.message || "Registration failed",
+            backend: data.error || "Registration failed",
           }));
         }
       } catch (error) {
@@ -114,35 +94,35 @@ function SignUp() {
         ) : (
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block text-sm mb-2" htmlFor="firstName">
+              <label className="block text-sm mb-2" htmlFor="first_name">
                 First Name
               </label>
               <input
                 type="text"
-                id="firstName"
-                value={formData.firstName}
+                id="first_name" // Updated to match backend
+                value={formData.first_name}
                 onChange={handleChange}
                 placeholder="John"
                 className="w-full px-4 py-2 border rounded-lg bg-white bg-opacity-90"
               />
-              {errors.firstName && (
-                <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>
+              {errors.first_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>
               )}
             </div>
             <div className="mb-4">
-              <label className="block text-sm mb-2" htmlFor="lastName">
+              <label className="block text-sm mb-2" htmlFor="last_name">
                 Last Name
               </label>
               <input
                 type="text"
-                id="lastName"
-                value={formData.lastName}
+                id="last_name" // Updated to match backend
+                value={formData.last_name}
                 onChange={handleChange}
                 placeholder="Doe"
                 className="w-full px-4 py-2 border rounded-lg bg-white bg-opacity-90"
               />
-              {errors.lastName && (
-                <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>
+              {errors.last_name && (
+                <p className="text-red-500 text-xs mt-1">{errors.last_name}</p>
               )}
             </div>
             <div className="mb-4">
@@ -161,7 +141,7 @@ function SignUp() {
                 <p className="text-red-500 text-xs mt-1">{errors.email}</p>
               )}
             </div>
-            <div className="mb-1">
+            <div className="mb-4">
               <label className="block text-sm mb-2" htmlFor="password">
                 Password
               </label>
@@ -176,36 +156,7 @@ function SignUp() {
               {errors.password && (
                 <p className="text-red-500 text-xs mt-1">{errors.password}</p>
               )}
-              <div className="text-right mb-1">
-                <a
-                  href="/signin"
-                  className="text-sm text-gray-600 hover:text-gray-800"
-                >
-                  Forgot Password?
-                </a>
-              </div>
             </div>
-            {/* <div className="mb-4 ">
-              <label
-                className="block text-sm mb-2"
-                htmlFor="confirmPassword"
-              >
-                Confirm Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                placeholder="**********"
-                className="w-full px-4 py-2 border rounded-lg bg-white bg-opacity-90"
-              /> */}
-              {/* {errors.confirmPassword && (
-                <p className="text-red-500 text-xs mt-1">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div> */}
             {errors.backend && (
               <p className="text-red-500 text-xs mt-1 text-center">
                 {errors.backend}

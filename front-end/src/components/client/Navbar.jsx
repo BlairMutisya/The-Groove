@@ -1,27 +1,39 @@
-import React, { useState } from 'react';
-import {Link, NavLink, useNavigate } from "react-router-dom";
-
-import { VscAccount } from 'react-icons/vsc';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import React, { useState, useEffect } from "react";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { VscAccount } from "react-icons/vsc";
+import { FaBars, FaTimes } from "react-icons/fa";
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
-import SpaceList from "./SpaceList";
 
 const Navbar = () => {
   const [navOpen, setNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if user is logged in by checking authToken in localStorage
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+  }, []);
 
   const toggleNav = () => {
     setNavOpen(!navOpen);
   };
- 
-  
-  const toggleDropdown = () => {setDropdownOpen(!dropdownOpen);
-};
-const handleLogout = () => {
-  localStorage.removeItem("authToken")
-  navigate("/login");
-};
+
+  const toggleDropdown = () => {
+    setDropdownOpen(!dropdownOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    setIsLoggedIn(false); // Update login state
+    navigate("/login"); // Redirect to login page
+  };
+
   return (
     <header>
       <div className="flex justify-between items-center w-full h-14 fixed text-black px-4 bg-[#FCE8CF] shadow-md p-8 z-50">
@@ -68,40 +80,45 @@ const handleLogout = () => {
         {/* Account and Menu Icons */}
         <div className="flex cursor-pointer md:pr-4 z-10">
           <ul className="flex space-x-4">
-            <li>
-              <VscAccount size={30} />
-            </li>
+            {!isLoggedIn ? (
+              <>
+                <li>
+                  <VscAccount size={30} />
+                </li>
 
-            {/* Dropdown Menu */}
-            <li className="relative">
-              <div className="flex items-center" onClick={toggleDropdown}>
-                {/* <span>Account</span> */}
-                <MdOutlineKeyboardArrowDown size={24} className="ml-2" />
-              </div>
+                {/* Dropdown Menu */}
+                <li className="relative">
+                  <div className="flex items-center" onClick={toggleDropdown}>
+                    <MdOutlineKeyboardArrowDown size={24} className="ml-2" />
+                  </div>
 
-              {/* Dropdown Links */}
-              {dropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-[#FCE8CF] border-gray-200 rounded-lg shadow-lg z-10">
-              <Link 
-              to="components/admin" className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5">
-              Admin
-              </Link>
-                  <Link
-                    to="/Client"
-                    className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
-                  >
-                    Client
-                  </Link>
-                  <button
-                    onClick = {handleLogout}
-                  
-                    className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </li>
+                  {/* Dropdown Links */}
+                  {dropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-[#FCE8CF] border-gray-200 rounded-lg shadow-lg z-10">
+                      <Link
+                        to="/adminsignin"
+                        className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
+                      >
+                        Admin
+                      </Link>
+                      <Link
+                        to="/signup"
+                        className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
+                      >
+                        Client
+                      </Link>
+                    </div>
+                  )}
+                </li>
+              </>
+            ) : (
+              <button
+                onClick={handleLogout}
+                className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
+              >
+                Logout
+              </button>
+            )}
 
             {/* Mobile Menu Icon */}
             <li className="md:hidden" onClick={toggleNav}>
@@ -110,6 +127,7 @@ const handleLogout = () => {
           </ul>
         </div>
       </div>
+
       {/* Mobile Navigation */}
       <div
         className={`fixed top-14 left-0 w-full bg-[#FCE8CF] z-40 transition-transform duration-300 ease-in-out ${

@@ -29,7 +29,7 @@ const Contact = () => {
     setSuccessMessage("");
 
     try {
-      const response = await fetch(" http://127.0.0.1:5000/Contact", {
+      const response = await fetch(" http://127.0.0.1:5000/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -155,8 +155,6 @@ const Contact = () => {
                   value={formData.message}
                   onChange={handleChange}
                   rows="4"
-                  value={formData.message}
-                  onChange={handleChange}
                   placeholder="Tell us a little about the project..."
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 ></textarea>

@@ -111,10 +111,9 @@ class Review(db.Model):
 
 class Contact(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    first_name = db.Column(db.Text, nullable=False)
-    last_name = db.Column(db.Text, nullable=False)
-    phone_number = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
     message = db.Column(db.Text, nullable=False)
 
 # Define roles
@@ -269,9 +268,9 @@ def validate_password(password):
     if not re.search(r'[\W_]', password):
         return "Password must contain at least one special character."
     return None
-@app.route('/register', methods=['POST'])
+@app.route('/signup', methods=['POST'])
 
-def register():
+def signup():
     data = request.json
     first_name = data.get('first_name')
     last_name = data.get('last_name')
@@ -302,7 +301,7 @@ def register():
 # User Login
 @app.route('/signin', methods=['POST', 'GET'])
 
-def login():
+def signin():
     if request.method == 'POST':
         data = request.json
         email = data.get('email')
@@ -657,22 +656,25 @@ def delete_review(id):
     return jsonify({'message': 'Review deleted successfully'}), 200
 
 @app.route('/contact', methods=['POST'])
-@login_required
 def create_contact():
-    data = request.get_json()
+    data = request.json
+    name = data.get('name')
+    phone = data.get('phone')
+    email = data.get('email')
+    message = data.get('message')
+  
+    if not all([name, phone, email, message]):
+        return jsonify({'error': 'Missing required fields'}), 400
 
-    # Create a new contact entry
-    new_contact = Contact(
-        name=data['name'],
-        email=data['email'],
-        phone=data.get('phone'),
-        message=data['message']
+    contact = Contact(
+        name=name,
+        phone=phone,
+        email=email,
+        message=message
     )
-
-    db.session.add(new_contact)
+    db.session.add(contact)
     db.session.commit()
-
-    return jsonify({"message": "Contact form submitted successfully!"}), 201
+    return jsonify({'message': 'Contact created successfully'}), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
