@@ -12,6 +12,9 @@ import SpaceDetails from "./components/client/SpaceDetails";
 import LandingPage from "./components/client/LandingPage";
 import SpaceList from "./components/client/SpaceList";
 import Navbar from "./components/client/Navbar";
+import AddSpace from "./components/admin/AddSpace";
+import ManageUsers from "./components/admin/ManageUsers";
+import ViewSpace from "./components/admin/ViewSpace";
 
 // const PUBLISHABLE_KEY =
 //   "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ";
@@ -86,6 +89,33 @@ const router = createBrowserRouter([
       <div>
         <Navbar />
         <SignIn />
+      </div>
+    ),
+  },
+  {
+    path: "/AddSpace",
+    element: (
+      <div>
+       
+        <AddSpace />
+      </div>
+    ),
+  },
+  {
+    path: "/MangeUsers",
+    element: (
+      <div>
+       
+        <ManageUsers />
+      </div>
+    ),
+  },
+  {
+    path: "/ViewSpace",
+    element: (
+      <div>
+       
+        <ViewSpace />
       </div>
     ),
   },

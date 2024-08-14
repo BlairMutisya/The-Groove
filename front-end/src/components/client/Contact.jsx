@@ -1,8 +1,61 @@
-import React from "react";
+import React, { useState } from "react";
 import Navbar from "./Navbar"; // Adjust the path as necessary
 import Footer from "./Footer"; // Adjust the path as necessary
 
 const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSuccessMessage("");
+
+    try {
+      const response = await fetch(" http://127.0.0.1:5000/Contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setSuccessMessage("Thank you! Your message has been sent.");
+        // Optionally reset the form
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          message: "",
+        });
+      } else {
+        setSuccessMessage("Sorry, something went wrong. Please try again.");
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSuccessMessage("Sorry, something went wrong. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Navbar */}
@@ -35,7 +88,7 @@ const Contact = () => {
             </p>
 
             {/* Form */}
-            <form action="#" method="POST" className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label
                   htmlFor="name"
@@ -47,6 +100,8 @@ const Contact = () => {
                   type="text"
                   id="name"
                   name="name"
+                  value={formData.name}
+                  onChange={handleChange}
                   placeholder="Your name"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
@@ -62,6 +117,8 @@ const Contact = () => {
                   type="email"
                   id="email"
                   name="email"
+                  value={formData.email}
+                  onChange={handleChange}
                   placeholder="Enter email address"
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
@@ -77,6 +134,8 @@ const Contact = () => {
                   type="text"
                   name="phone"
                   id="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
                   placeholder="Enter phone number"
                   className="mt-1 block w-full border border-gray-300 rounded-md py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 />
@@ -92,6 +151,8 @@ const Contact = () => {
                   id="message"
                   name="message"
                   rows="4"
+                  value={formData.message}
+                  onChange={handleChange}
                   placeholder="Tell us a little about the project..."
                   className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-purple-500 focus:border-purple-500 sm:text-sm"
                 ></textarea>
@@ -100,11 +161,19 @@ const Contact = () => {
                 <button
                   type="submit"
                   className="w-full bg-purple-500 text-white py-2 px-4 rounded-md hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50"
+                  disabled={isSubmitting}
                 >
-                  Submit Message
+                  {isSubmitting ? "Submitting..." : "Submit Message"}
                 </button>
               </div>
             </form>
+
+            {/* Success Message */}
+            {successMessage && (
+              <p className="mt-4 text-center text-green-500">
+                {successMessage}
+              </p>
+            )}
           </div>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { NavLink } from 'react-router-dom';
+import {Link, NavLink, useNavigate } from "react-router-dom";
+
 import { VscAccount } from 'react-icons/vsc';
 import { FaBars, FaTimes } from 'react-icons/fa';
 import { MdOutlineKeyboardArrowDown } from "react-icons/md";
@@ -9,14 +10,19 @@ import SpaceList from './SpaceList';
 const Navbar = () => {
   const [navOpen, setNavOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const navigate = useNavigate();
 
   const toggleNav = () => {
     setNavOpen(!navOpen);
   };
-
+ 
   
-  const toggleDropdown = () => setDropdownOpen(!dropdownOpen);
-
+  const toggleDropdown = () => {setDropdownOpen(!dropdownOpen);
+};
+const handleLogout = () => {
+  localStorage.removeItem("authToken")
+  navigate("/login");
+};
   return (
     <header>
       <div className="flex justify-between items-center w-full h-14 fixed text-black px-4 bg-[#FCE8CF] shadow-md p-8 z-50">
@@ -77,24 +83,23 @@ const Navbar = () => {
               {/* Dropdown Links */}
               {dropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-[#FCE8CF] border-gray-200 rounded-lg shadow-lg z-10">
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
-                  >
-                    Admin
-                  </a>
-                  <a
-                    href="#"
+              <Link 
+              to="components/admin" className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5">
+              Admin
+              </Link>
+                  <Link
+                    to="/Client"
                     className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
                   >
                     Client
-                  </a>
-                  <a
-                    href="#"
+                  </Link>
+                  <button
+                    onClick = {handleLogout}
+                  
                     className="block px-4 py-2 text-gray-700 hover:bg-[#fff3e5]"
                   >
                     Logout
-                  </a>
+                  </button>
                 </div>
               )}
             </li>

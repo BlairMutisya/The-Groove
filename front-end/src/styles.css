@@ -4,3 +4,259 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+    background-color: #fef3e3;
+  }
+  .Hello{
+    color:aquamarine
+  }
+  /* From Uiverse.io by Praashoo7 */ 
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 3em;
+    padding-left: 2.8em;
+    padding-right: 2.8em;
+    padding-bottom: 2.1em;
+    border: 2px dashed #DAA06D;
+    border-radius: 15px;
+    background-color: #EADDCA;
+    box-shadow: 0 0 0 4px #EADDCA, 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
+    transition: .4s ease-in-out;
+    width: 30%;
+    margin-left: 28em;
+    margin-top: 2em;
+  }
+  
+  ::placeholder {
+    color: #DAA06D;
+    text-align: left;
+  }
+  
+  .form .heading {
+    padding-left: 0.8em;
+    color: #DAA06D;
+    background-color: transparent;
+    letter-spacing: .5em;
+    text-align: center;
+    padding-top: 1em;
+    padding-bottom: 3em;
+    text-shadow: inset -1px -1px 1px #DAA06D;
+  }
+  
+  .form .input {
+    outline: none;
+    padding: 0.5em;
+    border: 1px solid #DAA06D;
+    color:#7c3f00;
+    width: 100%;
+    height: 3em;
+    border-radius: 10px;
+    background-color: #EADDCA;
+    text-align: center;
+  }
+  
+  .form .btn {
+    align-self: center;
+    margin-top: 2em;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    color: white;
+    background-color: #E5AA70;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    transition: .4s ease-in-out opacity,.1s ease-in-out active;
+    padding: 1em;
+    box-shadow: 0.5px 0.5px 0.5px 0.5px rgba(0, 0, 0, 0.5);
+  }
+  
+  .form .btn:hover {
+    opacity: 0.8;
+  }
+  
+  .form .btn:active {
+    transform: translateX(0.1em) translateY(0.1em);
+    box-shadow: none;
+  }
+  .AddSpaceDiv{
+    background-color: #fef3e3;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  button {
+    outline: none;
+    color: #DAA06D;
+    padding: 1em;
+    padding-left: 3em;
+    padding-right: 3em;
+    border: 2px dashed #DAA06D;
+    border-radius: 15px;
+    background-color: #EADDCA;
+    box-shadow: 0 0 0 4px #EADDCA, 2px 2px 4px 2px rgba(0, 0, 0, 0.5);
+    transition: .1s ease-in-out, .4s color;
+  }
+  
+  button:active {
+    transform: translateX(0.1em) translateY(0.1em);
+    box-shadow: 0 0 0 4px #EADDCA, 1.5px 1.5px 2.5px 1.5px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* General styling */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .navbar, .footer {
+    width: 100%;
+  }
+  
+  /* Content Container */
+  .content-container {
+    padding-top: 20px;
+    background-color: #fff3e5;
+  }
+  
+  /* Heading */
+  .heading-container {
+    display: flex;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .heading {
+    margin-bottom: 11px;
+    color: #DAA06D;
+  }
+  
+  /* Grid Container */
+  .grid-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 0 16px;
+  }
+  
+  @media (min-width: 768px) {
+    .grid-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  
+  /* Product Card */
+  .product-card {
+    position: relative;
+    border-bottom: 2px solid #2a2a2a;
+  }
+  
+  .indicator {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+  }
+  
+  
+  /* Product Content */
+  .product-content {
+    display: flex;
+    background-color: #fff3e5;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  
+  /* Image Container */
+  .image-container {
+    width: 250px;
+  }
+  
+  .product-image {
+    border-radius: 8px;
+    width: 100%;
+    height: 192px;
+    object-fit: cover;
+  }
+  
+  /* Product Details */
+  .product-details {
+    margin-left: 16px;
+    flex: 1;
+  }
+  
+  .product-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .product-location {
+    color: #666;
+    margin-bottom: 16px;
+  }
+  
+  /* Rating */
+  .rating {
+    display: flex;
+    align-items: center;
+  }
+  
+  .star {
+    width: 16px;
+    height: 16px;
+    margin-left: 4px;
+    color: #ccc;
+  }
+  
+  .star.filled {
+    color: #ffd700;
+  }
+  
+  /* Price and Link */
+  .price-and-link {
+    margin-top: 44px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .product-price {
+    background-color: #fff;
+    padding: 4px 8px;
+    border-radius: 4px;
+  }
+  
+  .view-link {
+    color: #fff;
+    background-color: #4a8cb8;
+    border-radius: 8px;
+    padding: 8px 16px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+  }
+  
+  .view-link:hover {
+    background-color: #79a9c2;
+  }
+  /* Center the buttons-container div and space out the buttons */
+  .buttons-container {
+    display: flex;
+    justify-content: center;  /* Center the buttons horizontally */
+    align-items: center;      /* Center the buttons vertically */
+    gap: 20px;                /* Add space between the buttons */
+    margin-top: 20px;         /* Add top margin to the container */
+    margin-bottom: 20px;
+  }

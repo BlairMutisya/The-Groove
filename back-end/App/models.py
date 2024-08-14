@@ -76,3 +76,11 @@ class Review(db.Model):
     rating = db.Column(db.Integer, nullable=False)  # Rating in stars
     user_first_name = db.Column(db.String(50), nullable=False)
     user_last_name = db.Column(db.String(50), nullable=False)
+
+class Contact(db.Model):
+    # id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.Text, nullable=False)
+    last_name = db.Column(db.Text, nullable=False)
+    phone_number = db.Column(db.Integer, nullable=False)
+    message = db.Column(db.Text, nullable=False)
+    # help = db.Column(db.Text, nullable=False)

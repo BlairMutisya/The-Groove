@@ -1,8 +1,8 @@
-"""Initial migration.
+"""done
 
-Revision ID: e3e5deb24095
+Revision ID: 1103d8c15362
 Revises: 
-Create Date: 2024-08-13 15:01:06.740859
+Create Date: 2024-08-13 23:02:37.622091
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e3e5deb24095'
+revision = '1103d8c15362'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -28,6 +28,15 @@ def upgrade():
     sa.Column('password', sa.String(length=100), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
+    )
+    op.create_table('contact',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.Column('first_name', sa.Text(), nullable=False),
+    sa.Column('last_name', sa.Text(), nullable=False),
+    sa.Column('message', sa.Text(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     op.create_table('space',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -97,5 +106,6 @@ def downgrade():
     op.drop_table('payment')
     op.drop_table('booked_space')
     op.drop_table('space')
+    op.drop_table('contact')
     op.drop_table('user')
     # ### end Alembic commands ###
