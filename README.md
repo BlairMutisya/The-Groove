@@ -141,12 +141,11 @@ seed.py is used to seed your database with initial data.
 
 config.py contains your configuration settings.
 
-Setting Up the Server.
+## Setting Up the Server.
 
 Navigate to the server directory:
 
 ```console
-Copy code
 cd server
 Install the dependencies:
 ```
