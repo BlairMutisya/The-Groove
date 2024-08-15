@@ -18,7 +18,7 @@ import re
 # Initialize the Flask app
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
+# app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -115,6 +115,19 @@ class Contact(db.Model):
     email = db.Column(db.String(100), nullable=False)
     phone = db.Column(db.String(20), nullable=False)
     message = db.Column(db.Text, nullable=False)
+
+class CreateBooking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+    agreement = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f"<Booking {self.first_name} {self.last_name}>"
 
 # Define roles
 users = {
@@ -246,10 +259,12 @@ def confirm_email(token):
         user.verified = True
         db.session.commit()
         flash('Email confirmed! You can now log in.', 'success')
-        return redirect(url_for('signin'))
+        # Redirect to the client-side sign-in page
+        return redirect('http://localhost:3000/signin')
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
-        return redirect(url_for('signin'))
+        # Redirect to the client-side sign-in page even if the link is invalid
+        return redirect('http://localhost:3000/signin')
 
 # Homepage route
 @app.route('/')
@@ -301,7 +316,7 @@ def signup():
 # User Login
 @app.route('/signin', methods=['POST', 'GET'])
 
-def signin():
+def login():
     if request.method == 'POST':
         data = request.json
         email = data.get('email')
@@ -377,6 +392,7 @@ def get_spaces():
         'name': space.name,
         'location': space.location,
         'description': space.description,
+        'price': space.price, 
         'rating': space.rating,
         'status': space.status,
         'image_url': space.image_url,
@@ -457,7 +473,7 @@ def delete_space(id):
     return jsonify({'message': 'Space deleted successfully'}), 200
 
 # Booking CRUD operations
-@app.route('/bookings', methods=['POST'])
+@app.route('/bookings', methods=['POST', ])
 @login_required
 def create_booking():
     data = request.json
@@ -675,6 +691,47 @@ def create_contact():
     db.session.add(contact)
     db.session.commit()
     return jsonify({'message': 'Contact created successfully'}), 201
+
+@app.route('/contacts', methods=['GET'])
+def get_contacts():
+    contacts = Contact.query.all()
+    return jsonify([
+        {
+            'id': contact.id,
+            'name': contact.name,
+            'phone': contact.phone,
+            'email': contact.email,
+            'message': contact.message
+        } for contact in contacts
+    ]), 200
+
+
+@app.route('/create-bookings', methods=['POST'])
+def create_bookings():
+    data = request.get_json()
+    
+    new_booking = CreateBooking(
+        first_name=data.get('firstName'),
+        last_name=data.get('lastName'),
+        email=data.get('email'),
+        phone=data.get('phone'),
+        message=data.get('message'),
+        agreement=data.get('agreement', False)  
+    )
+    
+    db.session.add(new_booking)
+    db.session.commit()
+    
+    return jsonify({
+        'id': new_booking.id,
+        'first_name': new_booking.first_name,
+        'last_name': new_booking.last_name,
+        'email': new_booking.email,
+        'phone': new_booking.phone,
+        'message': new_booking.message,
+        'agreement': new_booking.agreement,
+        'created_at': new_booking.created_at
+    }), 201
 
 if __name__ == '__main__':
     app.run(debug=True)

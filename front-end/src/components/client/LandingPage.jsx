@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import Footer from './Footer'
-import Navbar from './Navbar'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from "react";
+import Footer from "./Footer";
+import Navbar from "./Navbar";
+import { Link } from "react-router-dom";
 
-const apiUrl = "https://fakestoreapi.com/products";
+const apiUrl = "http://localhost:5000/spaces";
 
 const LandingPage = () => {
   const [products, setProducts] = useState([]);
@@ -14,27 +14,25 @@ const LandingPage = () => {
       try {
         const response = await fetch(apiUrl);
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const data = await response.json();
         setProducts(data);
       } catch (error) {
         setError(error.message);
-      } 
+      }
     };
 
     fetchData();
   }, []);
 
-
   if (error) return <div>Error: {error}</div>;
-
 
   return (
     <div>
       <Navbar />
       <div name="home" className="h-full w-full bg-[#FFF3e5]">
-        <div className="w-full -mx-4 flex h-full px-4  md:flex-row">
+        <div className="w-full -mx-4 flex h-full px-4 md:flex-row">
           <div className="flex flex-col bg-[#FCE8CF] h-screen px-20 mr-2">
             <h3 className="py-2 sm:text-5xl text-2xl font-bold pt-36 mt-24">
               DISCOVER SPACES <br /> YOU'LL LOVE TO BE IN.
@@ -52,13 +50,15 @@ const LandingPage = () => {
             <img
               className="w-[500px] h-[520px] object-cover rounded-lg mr-6 mt-28 -mx-20"
               src="https://i.pinimg.com/564x/7a/bc/0e/7abc0ea4b3538f738d150ffe455b61e0.jpg"
+              alt="Main Banner"
             />
           </div>
         </div>
-        <div className="w-full max-w-5xl p-5 pb-10 mb-10 columns- gap-2 space-y-5 flex bg-[#fff3e5] ">
+        <div className="w-full max-w-5xl p-5 pb-10 mb-10 columns- gap-2 space-y-5 flex bg-[#fff3e5]">
           <img
             className="rounded-lg w-[300px] h-[500px]"
             src="https://i.pinimg.com/564x/a6/9a/9f/a69a9f8cb1267a77e47f3d50408d4e7b.jpg"
+            alt="Featured Space"
           />
           <div className="bg-[#FCE8CF] h-screen w-[3000px]">
             <h3 className="font-bold sm:text-5xl p-8 pb-0">FEATURED SPACES</h3>
@@ -69,12 +69,13 @@ const LandingPage = () => {
               <img
                 className="rounded-lg w-[300px] h-[500px] -mx-0 mt-1"
                 src="https://i.pinimg.com/474x/99/ec/34/99ec347680d26949daf4e65539d089c6.jpg"
+                alt="Featured Space"
               />
             </div>
           </div>
           <div className="justify-center w-[1800px] pl-18 -mx-20 pt-[400px]">
             <p className="text-xl">
-              All lovely spaces for you.No two spaces are ever the same.
+              All lovely spaces for you. No two spaces are ever the same.
             </p>
             <div className="p-10 pt-1">
               <Link
@@ -99,44 +100,44 @@ const LandingPage = () => {
             <img
               className="rounded-lg w-[300px] h-[500px] object-cover mt-"
               src="https://i.pinimg.com/736x/ae/3d/95/ae3d951a645c50105d1017b742bf4855.jpg"
+              alt="Additional Space"
             />
             <img
               className="rounded-lg w-[300px] h-[500px] object-cover mt-24"
               src="https://i.pinimg.com/474x/db/30/9d/db309d2eab68d19602a006da43332e75.jpg"
+              alt="Additional Space"
             />
           </div>
         </div>
-        <div className="">
+        <div>
           <div>
             <h1 className="justify-center items-center flex text-5xl font-bold">
               FEATURED SPACES
             </h1>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-            {products.slice(0, 4).map((product) => (
-              <div className="border-slate-950 border-b-2">
-                <div key={product.id} className="flex bg-[#fff3e5] p-4 mb-8 ">
+            {products.slice(0, 4).map((space) => (
+              <div key={space.id} className="border-slate-950 border-b-2">
+                <div className="flex bg-[#fff3e5] p-4 mb-8">
                   <div className="w-[250px]">
                     <img
                       className="rounded-lg w-full h-48 object-cover"
-                      src={product.image}
-                      alt={product.title}
+                      src={space.image_url}
+                      alt={space.name}
                     />
                   </div>
                   <div className="ml-5 flex-1">
-                    <p className="text-lg font-semibold mb-2">
-                      {product.title}
-                    </p>
+                    <p className="text-lg font-semibold mb-2">{space.name}</p>
                     <p className="text-gray-600 mb-4">
-                      Location: {product.category}
+                      Location: {space.location}
                     </p>
                     <div className="flex items-center">
-                      {/* Display product rating as stars */}
+                      {/* Display space rating as stars */}
                       {[...Array(5)].map((_, index) => (
                         <svg
                           key={index}
                           className={`w-4 h-4 ${
-                            index < Math.round(product.rating.rate)
+                            index < Math.round(space.rating)
                               ? "text-yellow-300"
                               : "text-gray-300"
                           } ms-1`}
@@ -210,6 +211,6 @@ const LandingPage = () => {
       <Footer />
     </div>
   );
-}
+};
 
-export default LandingPage
+export default LandingPage;

@@ -13,6 +13,7 @@ const Dashboard = () => {
   const [spaces, setSpaces] = useState([]);
   const [users, setUsers] = useState([]);
   const [bookings, setBookings] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [newSpace, setNewSpace] = useState({
     name: "",
     description: "",
@@ -35,6 +36,7 @@ const Dashboard = () => {
     fetchAllSpaces();
     fetchAllUsers();
     fetchBookedSpaces();
+    fetchContacts();
   }, []);
 
   const checkAuth = async () => {
@@ -61,22 +63,38 @@ const Dashboard = () => {
   };
 
   const fetchAllUsers = async () => {
-    const response = await fetch("/api/users");
+    const response = await fetch("http://localhost:5000/users");
     const data = await response.json();
-    setUsers(data);
+    if (Array.isArray(data)) {
+      setUsers(data);
+    } else {
+      console.error("Expected an array but received:", data);
+      setUsers([]); // Set to empty array if data is not an array
+    }
   };
 
- const fetchBookedSpaces = async () => {
-   const response = await fetch("http://localhost:5000/bookings");
-   const data = await response.json();
-   console.log(data); // Log the response data
-   if (Array.isArray(data)) {
-     setBookings(data);
-   } else {
-     console.error("Expected an array but received:", data);
-     setBookings([]); // Set to empty array if data is not an array
-   }
- };
+  const fetchBookedSpaces = async () => {
+    const response = await fetch("http://localhost:5000/bookings");
+    const data = await response.json();
+    console.log(data); // Log the response data
+    if (Array.isArray(data)) {
+      setBookings(data);
+    } else {
+      console.error("Expected an array but received:", data);
+      setBookings([]); // Set to empty array if data is not an array
+    }
+  };
+
+  const fetchContacts = async () => {
+    const response = await fetch("http://localhost:5000/contacts");
+    const data = await response.json();
+    if (Array.isArray(data)) {
+      setContacts(data);
+    } else {
+      console.error("Expected an array but received:", data);
+      setContacts([]); // Set to empty array if data is not an array
+    }
+  };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -122,13 +140,13 @@ const Dashboard = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-800 text-white shadow-lg">
+      <div className="w-64 bg-[#fce8d0] text-black shadow-lg">
         <div className="p-4 text-2xl font-bold">The Groove Admin</div>
         <nav className="mt-6">
           <ul>
             <li
               className={`py-2 px-4 hover:bg-gray-700 cursor-pointer ${
-                activeSection === "allSpaces" ? "bg-gray-700" : ""
+                activeSection === "allSpaces" ? "bg-[#fce8d0]" : ""
               }`}
               onClick={() => setActiveSection("allSpaces")}
             >
@@ -157,6 +175,14 @@ const Dashboard = () => {
               onClick={() => setActiveSection("addSpace")}
             >
               Add Space
+            </li>
+            <li
+              className={`py-2 px-4 hover:bg-gray-700 cursor-pointer ${
+                activeSection === "contacted" ? "bg-gray-700" : ""
+              }`}
+              onClick={() => setActiveSection("contacted")}
+            >
+              Contacted
             </li>
           </ul>
         </nav>
@@ -228,7 +254,6 @@ const Dashboard = () => {
                     <th className="py-3 px-4">First Name</th>
                     <th className="py-3 px-4">Last Name</th>
                     <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Verified</th>
                     <th className="py-3 px-4">Role</th>
                   </tr>
                 </thead>
@@ -238,9 +263,6 @@ const Dashboard = () => {
                       <td className="py-2 px-4">{user.first_name}</td>
                       <td className="py-2 px-4">{user.last_name}</td>
                       <td className="py-2 px-4">{user.email}</td>
-                      <td className="py-2 px-4">
-                        {user.verified ? "Yes" : "No"}
-                      </td>
                       <td className="py-2 px-4">{user.role}</td>
                     </tr>
                   ))}
@@ -256,31 +278,17 @@ const Dashboard = () => {
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-gray-800 text-white">
                   <tr>
-                    <th className="py-3 px-4">User Name</th>
-                    <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Contact</th>
                     <th className="py-3 px-4">Space Name</th>
-                    <th className="py-3 px-4">Price</th>
-                    <th className="py-3 px-4">Location</th>
-                    <th className="py-3 px-4">Status</th>
-                    <th className="py-3 px-4">Paid</th>
+                    <th className="py-3 px-4">User</th>
+                    <th className="py-3 px-4">Booking Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookings.map((booking) => (
                     <tr key={booking.id} className="border-b hover:bg-gray-50">
-                      <td className="py-2 px-4">
-                        {booking.user_first_name} {booking.user_last_name}
-                      </td>
-                      <td className="py-2 px-4">{booking.email}</td>
-                      <td className="py-2 px-4">{booking.contact}</td>
                       <td className="py-2 px-4">{booking.space_name}</td>
-                      <td className="py-2 px-4">${booking.price}</td>
-                      <td className="py-2 px-4">{booking.location}</td>
-                      <td className="py-2 px-4">{booking.status}</td>
-                      <td className="py-2 px-4">
-                        {booking.paid ? "Yes" : "No"}
-                      </td>
+                      <td className="py-2 px-4">{booking.user}</td>
+                      <td className="py-2 px-4">{booking.booking_date}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -291,105 +299,129 @@ const Dashboard = () => {
           {/* Add Space Section */}
           {activeSection === "addSpace" && (
             <div>
-              <h2 className="text-3xl font-bold mb-6">Add New Space</h2>
-              <form
-                onSubmit={addSpace}
-                className="bg-white p-6 shadow-md rounded-lg"
-              >
-                <div className="mb-4">
-                  <label className="block text-gray-700">Name</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={newSpace.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Description</label>
-                  <textarea
-                    name="description"
-                    value={newSpace.description}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Location</label>
-                  <input
-                    type="text"
-                    name="location"
-                    value={newSpace.location}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Price</label>
-                  <input
-                    type="number"
-                    name="price"
-                    value={newSpace.price}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Image URL</label>
-                  <input
-                    type="text"
-                    name="image_url"
-                    value={newSpace.image_url}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Status</label>
-                  <select
-                    name="status"
-                    value={newSpace.status}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Unavailable">Unavailable</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Rating</label>
-                  <input
-                    type="number"
-                    name="rating"
-                    value={newSpace.rating}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">User ID</label>
-                  <input
-                    type="number"
-                    name="user_id"
-                    value={newSpace.user_id}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded"
-                    required
-                  />
+              <h2 className="text-3xl font-bold mb-6">Add Space</h2>
+              <form onSubmit={addSpace}>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-gray-700">Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={newSpace.name}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Description</label>
+                    <textarea
+                      name="description"
+                      value={newSpace.description}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Location</label>
+                    <input
+                      type="text"
+                      name="location"
+                      value={newSpace.location}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Price</label>
+                    <input
+                      type="number"
+                      name="price"
+                      value={newSpace.price}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Image URL</label>
+                    <input
+                      type="text"
+                      name="image_url"
+                      value={newSpace.image_url}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Status</label>
+                    <select
+                      name="status"
+                      value={newSpace.status}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                    >
+                      <option value="Available">Available</option>
+                      <option value="Booked">Booked</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">Rating</label>
+                    <input
+                      type="number"
+                      name="rating"
+                      value={newSpace.rating}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-700">User ID</label>
+                    <input
+                      type="text"
+                      name="user_id"
+                      value={newSpace.user_id}
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-2 border rounded-lg"
+                    />
+                  </div>
                 </div>
                 <button
                   type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                  className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
                 >
                   Add Space
                 </button>
               </form>
+            </div>
+          )}
+
+          {/* Contacted Section */}
+          {activeSection === "contacted" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Contacted</h2>
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-gray-800 text-white">
+                  <tr>
+                    <th className="py-3 px-4">Name</th>
+                    <th className="py-3 px-4">Phone</th>
+                    <th className="py-3 px-4">Email</th>
+                    <th className="py-3 px-4">Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contacts.map((contact) => (
+                    <tr key={contact.id} className="border-b hover:bg-gray-50">
+                      <td className="py-2 px-4">{contact.name}</td>
+                      <td className="py-2 px-4">{contact.phone}</td>
+                      <td className="py-2 px-4">{contact.email}</td>
+                      <td className="py-2 px-4">{contact.message}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           )}
         </div>

@@ -84,3 +84,14 @@ class Contact(db.Model):
     phone_number = db.Column(db.Integer, nullable=False)
     message = db.Column(db.Text, nullable=False)
     # help = db.Column(db.Text, nullable=False)
+
+class CreateBooking(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(100), nullable=False)
+    last_name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20), nullable=False)
+    message = db.Column(db.Text, nullable=True)
+    agreement = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+

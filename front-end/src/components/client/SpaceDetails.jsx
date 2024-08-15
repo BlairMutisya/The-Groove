@@ -1,44 +1,97 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import Footer from '../client/Footer';
-import Navbar from '../client/Navbar'
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import Footer from "../client/Footer";
+import Navbar from "../client/Navbar";
 
-const apiUrl = "https://fakestoreapi.com/products";
+const apiUrl = "http://localhost:5000/spaces";
+const bookingUrl = "http://localhost:5000/create-bookings"; 
 
 const SpaceDetails = () => {
-    const { id } = useParams();
-    const [product, setProduct] = useState(null);
-    const [error, setError] = useState(null);
-  
-    useEffect(() => {
-      const fetchProduct = async () => {
-        try {
-          const response = await fetch(`${apiUrl}/${id}`);
-          if (!response.ok) {
-            throw new Error('Product not found');
-          }
-          const data = await response.json();
-          setProduct(data);
-        } catch (error) {
-          setError(error.message);
-        }
-      };
-  
-      fetchProduct();
-    }, [id]);
+  const { id } = useParams();
+  const [space, setSpace] = useState(null);
+  const [error, setError] = useState(null);
 
-    if (error) return <div>Error: {error}</div>;
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    message: "",
+    agreement: false,
+  });
+
+  useEffect(() => {
+    const fetchSpace = async () => {
+      try {
+        const response = await fetch(`${apiUrl}/${id}`);
+        if (!response.ok) {
+          throw new Error("Space not found");
+        }
+        const data = await response.json();
+        setSpace(data);
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+
+    fetchSpace();
+  }, [id]);
+
+  const handleInputChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(bookingUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to create booking");
+      }
+
+      const result = await response.json();
+      console.log("Booking created:", result);
+      alert("Booking created successfully!");
+
+      // Optionally, you can reset the form after submission
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+        agreement: false,
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error creating booking. Please try again.");
+    }
+  };
+
+  if (error) return <div>Error: {error}</div>;
 
   return (
     <div className="bg-[#fff3e5]">
       <Navbar />
       <div name="details" className="pt-14">
-        {product ? (
+        {space ? (
           <div>
             <header className="bg-[#fff3e5] p-6 flex justify-between items-center">
-              <h1 className="text-3xl font-bold">{product.title}</h1>
+              <h1 className="text-3xl font-bold">{space.name}</h1>
               <span className="bg-orange-500 text-white py-2 px-4 rounded-lg">
-                {product.price} / hour
+                KSH {space.price} / hour
               </span>
             </header>
 
@@ -47,8 +100,8 @@ const SpaceDetails = () => {
                 <div className="flex-shrink-0">
                   <img
                     className="rounded-lg shadow-lg object-cover h-[520px] w-[520px]"
-                    src={product.image}
-                    alt={product.title}
+                    src={space.image_url}
+                    alt={space.name}
                   />
                 </div>
 
@@ -59,17 +112,21 @@ const SpaceDetails = () => {
                   <p className="mb-4 ml-4 md:ml-10">
                     Our friendly team would love to hear from you.
                   </p>
-                  <form className="space-y-4">
+                  <form className="space-y-4" onSubmit={handleSubmit}>
                     <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4">
                       <input
                         type="text"
                         name="firstName"
+                        value={formData.firstName}
+                        onChange={handleInputChange}
                         placeholder="First name"
                         className="border rounded-lg p-2 w-full md:w-48"
                       />
                       <input
                         type="text"
                         name="lastName"
+                        value={formData.lastName}
+                        onChange={handleInputChange}
                         placeholder="Last name"
                         className="border rounded-lg p-2 w-full md:w-48"
                       />
@@ -78,18 +135,24 @@ const SpaceDetails = () => {
                     <input
                       type="email"
                       name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
                       placeholder="Email address"
                       className="border rounded-lg p-2 w-full md:w-[400px]"
                     />
                     <input
                       type="tel"
                       name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="Phone number"
                       className="border rounded-lg p-2 w-full md:w-[400px]"
                     />
 
                     <textarea
                       name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       placeholder="Message"
                       className="border rounded-lg p-2 w-full md:w-[400px]"
                       rows="4"
@@ -99,6 +162,8 @@ const SpaceDetails = () => {
                       <input
                         type="checkbox"
                         name="agreement"
+                        checked={formData.agreement}
+                        onChange={handleInputChange}
                         className="form-checkbox"
                       />
                       <span>
@@ -121,17 +186,17 @@ const SpaceDetails = () => {
 
               <section className="mt-12 bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-semibold mb-4">Description</h2>
-                <p className="text-gray-600 mb-4"> {product.description}</p>
+                <p className="text-gray-600 mb-4">{space.description}</p>
               </section>
             </main>
           </div>
         ) : (
-          <div>No product found</div>
+          <div>No space found</div>
         )}
       </div>
       <Footer />
     </div>
   );
-}
+};
 
-export default SpaceDetails
+export default SpaceDetails;
