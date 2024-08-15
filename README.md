@@ -157,12 +157,10 @@ pipenv shell
 Run the Flask API:
 ```
 ```console
-Copy code
 python app.py
 Create the instance and migrations folders and the database app.db file:
 ```
 ```console
-Copy code
 flask db init
 flask db upgrade head
 client/
@@ -171,47 +169,42 @@ Setting Up the Client
 Install the dependencies:
 ```
 ```console
-Copy code
 npm install --prefix client
 Run the React app:
 ```
 ```console
-Copy code
 npm start --prefix client
 Database Management
 Creating the Database
 Navigate to the server directory:
 ```
 ```console
-Copy code
 cd server
 Initialize and upgrade the database:
 ```
 ```console
-Copy code
 flask db init
 flask db upgrade head
 Create a revision:
 ```
 ```console
-Copy code
 flask db revision --autogenerate -m "Initial migration"
 Upgrade the database:
 ```
 ```console
-Copy code
 flask db upgrade head
 Seeding the Database
 Run the seed script:
 ```
 ```console
-Copy code
 python seed.py
 Contributing
 Contributions are welcome! To contribute:
 ```
 Fork this repository.
+
 Create a new branch (git checkout -b feature/your-feature-name).
+
 Make your changes.
 
 Commit your changes (git commit -m 'Add some feature').
