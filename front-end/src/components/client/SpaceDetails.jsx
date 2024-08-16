@@ -4,9 +4,9 @@ import Footer from "../client/Footer";
 import Navbar from "../client/Navbar";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-const apiUrl = "http://localhost:5000/spaces";
-const bookingUrl = "http://localhost:5000/create-bookings";
-const reviewUrl = "http://localhost:5000/reviews"; // URL for submitting reviews
+const apiUrl = "https://the-groove.onrender.com/spaces";
+const bookingUrl = "https://the-groove.onrender.com/create-bookings";
+const reviewUrl = "https://the-groove.onrender.com/reviews"; // URL for submitting reviews
 
 const SpaceDetails = () => {
   const { id } = useParams();
