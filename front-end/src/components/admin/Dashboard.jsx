@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaSearch, FaSignOutAlt } from "react-icons/fa";
+import { FaSearch, FaSignOutAlt, FaCheck } from "react-icons/fa";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState("allSpaces");
@@ -19,6 +19,7 @@ const Dashboard = () => {
     rating: "",
     user_id: "",
   });
+  const [editableSpace, setEditableSpace] = useState(null);
   const [userRole, setUserRole] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -94,7 +95,11 @@ const Dashboard = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewSpace({ ...newSpace, [name]: value });
+    if (editableSpace) {
+      setEditableSpace({ ...editableSpace, [name]: value });
+    } else {
+      setNewSpace({ ...newSpace, [name]: value });
+    }
   };
 
   const addSpace = async (e) => {
@@ -132,7 +137,7 @@ const Dashboard = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        // credentials: "include", // Ensure cookies are sent if needed
+        credentials: "include", // Ensure cookies are sent if needed
       });
 
       if (!response.ok) {
@@ -168,19 +173,30 @@ const Dashboard = () => {
     }
   };
 
-  const handleUpdate = async (id, updatedSpace) => {
-    const response = await fetch(`http://localhost:5000/spaces/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedSpace),
-    });
-    if (response.ok) {
-      alert("Space updated successfully!");
-      fetchAllSpaces();
-    } else {
-      alert("Failed to update space.");
+  const handleUpdateClick = (space) => {
+    setEditableSpace(space);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    if (editableSpace) {
+      const response = await fetch(
+        `http://localhost:5000/spaces/${editableSpace.id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(editableSpace),
+        }
+      );
+      if (response.ok) {
+        alert("Space updated successfully!");
+        setEditableSpace(null);
+        fetchAllSpaces();
+      } else {
+        alert("Failed to update space.");
+      }
     }
   };
 
@@ -280,34 +296,254 @@ const Dashboard = () => {
                       key={space.id}
                       className="relative group hover:bg-gray-100"
                     >
-                      <td className="py-2 px-4">{space.name}</td>
-                      <td className="py-2 px-4">{space.description}</td>
-                      <td className="py-2 px-4">{space.location}</td>
-                      <td className="py-2 px-4">{space.price}</td>
-                      <td className="py-2 px-4">{space.status}</td>
-                      <td className="py-2 px-4">{space.rating}</td>
                       <td className="py-2 px-4">
-                        <button
-                          onClick={() => handleDelete(space.id)}
-                          className="text-red-600 hover:text-red-800"
-                        >
-                          Delete
-                        </button>
-                        <button
-                          onClick={() =>
-                            handleUpdate(space.id, {
-                              ...space,
-                              status:
-                                space.status === "Available"
-                                  ? "Not Available"
-                                  : "Available",
-                            })
-                          }
-                          className="ml-4 text-blue-600 hover:text-blue-800"
-                        >
-                          Update
-                        </button>
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="name"
+                            value={editableSpace.name || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.name
+                        )}
                       </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="description"
+                            value={editableSpace.description || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.description
+                        )}
+                      </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="location"
+                            value={editableSpace.location || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.location
+                        )}
+                      </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="price"
+                            value={editableSpace.price || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.price
+                        )}
+                      </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="status"
+                            value={editableSpace.status || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.status
+                        )}
+                      </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <input
+                            type="text"
+                            name="rating"
+                            value={editableSpace.rating || ""}
+                            onChange={handleInputChange}
+                            className="border px-2 py-1"
+                          />
+                        ) : (
+                          space.rating
+                        )}
+                      </td>
+                      <td className="py-2 px-4">
+                        {editableSpace && editableSpace.id === space.id ? (
+                          <>
+                            <button
+                              onClick={handleUpdate}
+                              className="text-green-600 hover:text-green-800"
+                            >
+                              <FaCheck />
+                            </button>
+                            <button
+                              onClick={() => setEditableSpace(null)}
+                              className="text-red-600 hover:text-red-800 ml-2"
+                            >
+                              Cancel
+                            </button>
+                          </>
+                        ) : (
+                          <>
+                            <button
+                              onClick={() => handleUpdateClick(space)}
+                              className="text-blue-600 hover:text-blue-800"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(space.id)}
+                              className="text-red-600 hover:text-red-800 ml-4"
+                            >
+                              Delete
+                            </button>
+                          </>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Add Space Section */}
+          {activeSection === "addSpace" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Add New Space</h2>
+              <form onSubmit={addSpace} className="space-y-4">
+                <input
+                  type="text"
+                  name="name"
+                  value={newSpace.name}
+                  onChange={handleInputChange}
+                  placeholder="Name"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="description"
+                  value={newSpace.description}
+                  onChange={handleInputChange}
+                  placeholder="Description"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="location"
+                  value={newSpace.location}
+                  onChange={handleInputChange}
+                  placeholder="Location"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="price"
+                  value={newSpace.price}
+                  onChange={handleInputChange}
+                  placeholder="Price"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="image_url"
+                  value={newSpace.image_url}
+                  onChange={handleInputChange}
+                  placeholder="Image URL"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="status"
+                  value={newSpace.status}
+                  onChange={handleInputChange}
+                  placeholder="Status"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="rating"
+                  value={newSpace.rating}
+                  onChange={handleInputChange}
+                  placeholder="Rating"
+                  className="border px-4 py-2 w-full"
+                />
+                <input
+                  type="text"
+                  name="user_id"
+                  value={newSpace.user_id}
+                  onChange={handleInputChange}
+                  placeholder="User ID"
+                  className="border px-4 py-2 w-full"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  Add Space
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Contacted Section */}
+          {activeSection === "contacted" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6">
+                Contacted ({unreadMessages})
+              </h2>
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-[#fce8d0] text-black">
+                  <tr>
+                    <th className="py-3 px-4">ID</th>
+                    <th className="py-3 px-4">Name</th>
+                    <th className="py-3 px-4">Phone</th>
+                    <th className="py-3 px-4">Email</th>
+                    <th className="py-3 px-4">Message</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contacts.map((contact) => (
+                    <tr key={contact.id}>
+                      <td className="py-2 px-4">{contact.id}</td>
+                      <td className="py-2 px-4">{contact.name}</td>
+                      <td className="py-2 px-4">{contact.phone}</td>
+                      <td className="py-2 px-4">{contact.email}</td>
+                      <td className="py-2 px-4">{contact.message}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Booked Spaces Section */}
+          {activeSection === "bookedSpaces" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Booked Spaces</h2>
+              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+                <thead className="bg-[#fce8d0] text-black">
+                  <tr>
+                    <th className="py-3 px-4">Booking ID</th>
+                    <th className="py-3 px-4">Space Name</th>
+                    <th className="py-3 px-4">User Name</th>
+                    <th className="py-3 px-4">Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bookings.map((booking) => (
+                    <tr key={booking.id}>
+                      <td className="py-2 px-4">{booking.id}</td>
+                      <td className="py-2 px-4">{booking.spaceName}</td>
+                      <td className="py-2 px-4">{booking.userName}</td>
+                      <td className="py-2 px-4">{booking.date}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -322,6 +558,7 @@ const Dashboard = () => {
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-[#fce8d0] text-black">
                   <tr>
+                    <th className="py-3 px-4">ID</th>
                     <th className="py-3 px-4">Name</th>
                     <th className="py-3 px-4">Email</th>
                     <th className="py-3 px-4">Role</th>
@@ -329,218 +566,11 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {users.map((user) => (
-                    <tr
-                      key={user.id}
-                      className="relative group hover:bg-gray-100"
-                    >
-                      <td className="py-2 px-4">
-                        {user.first_name} {user.last_name}
-                      </td>
+                    <tr key={user.id}>
+                      <td className="py-2 px-4">{user.id}</td>
+                      <td className="py-2 px-4">{user.name}</td>
                       <td className="py-2 px-4">{user.email}</td>
                       <td className="py-2 px-4">{user.role}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-         {/* Booked Spaces Section */}
-         {activeSection === "bookedSpaces" && (
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Booked Spaces</h2>
-              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-[#fce8d0] text-black">
-                  <tr>
-                    <th className="py-3 px-4">First Name</th>
-                    <th className="py-3 px-4">Last Name</th>
-                    <th className="py-3 px-4">Contact</th>
-                    <th className="py-3 px-4">Space Name</th>
-                    <th className="py-3 px-4">Space Location</th>
-                    <th className="py-3 px-4">Booking Date</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.map((booking) => (
-                    <tr
-                      key={booking.id}
-                      className="relative group hover:bg-gray-100"
-                    >
-                      <td className="py-2 px-4">{booking.first_name}</td>
-                      <td className="py-2 px-4">{booking.last_name}</td>
-                      <td className="py-2 px-4">{booking.phone}</td>
-                      <td className="py-2 px-4">{booking.space_name}</td>
-                      <td className="py-2 px-4">{booking.location}</td>
-                      <td className="py-2 px-4">{booking.date}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {/* Add Space Section */}
-          {activeSection === "addSpace" && (
-            <div>
-              <h2 className="text-3xl font-bold mb-6">Add Space</h2>
-              <form
-                onSubmit={addSpace}
-                className="bg-white p-8 shadow-md rounded-lg"
-              >
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2" htmlFor="name">
-                    Name
-                  </label>
-                  <input
-                    type="text"
-                    id="name"
-                    name="name"
-                    value={newSpace.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 mb-2"
-                    htmlFor="description"
-                  >
-                    Description
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={newSpace.description}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 mb-2"
-                    htmlFor="location"
-                  >
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    id="location"
-                    name="location"
-                    value={newSpace.location}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2" htmlFor="price">
-                    Price
-                  </label>
-                  <input
-                    type="text"
-                    id="price"
-                    name="price"
-                    value={newSpace.price}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label
-                    className="block text-gray-700 mb-2"
-                    htmlFor="image_url"
-                  >
-                    Image URL
-                  </label>
-                  <input
-                    type="text"
-                    id="image_url"
-                    name="image_url"
-                    value={newSpace.image_url}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2" htmlFor="status">
-                    Status
-                  </label>
-                  <select
-                    id="status"
-                    name="status"
-                    value={newSpace.status}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  >
-                    <option value="Available">Available</option>
-                    <option value="Not Available">Not Available</option>
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2" htmlFor="rating">
-                    Rating
-                  </label>
-                  <input
-                    type="text"
-                    id="rating"
-                    name="rating"
-                    value={newSpace.rating}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700 mb-2" htmlFor="user_id">
-                    User ID
-                  </label>
-                  <input
-                    type="text"
-                    id="user_id"
-                    name="user_id"
-                    value={newSpace.user_id}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border rounded-lg"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="bg-[#ED1C24] text-white px-4 py-2 rounded-lg"
-                >
-                  Add Space
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* Contacted Section */}
-          {activeSection === "contacted" && (
-            <div>
-              <h2 className="text-3xl font-bold mb-6">
-                Contacted
-                {unreadMessages > 0 && (
-                  <span className="ml-2 text-red-600">
-                    ({unreadMessages} Messages)
-                  </span>
-                )}
-              </h2>
-              <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-                <thead className="bg-[#fce8d0] text-black">
-                  <tr>
-                    <th className="py-3 px-4">Name</th>
-                    <th className="py-3 px-4">Phone</th>
-                    <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Message</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {contacts.map((contact) => (
-                    <tr
-                      key={contact.id}
-                      className="relative group hover:bg-gray-100"
-                    >
-                      <td className="py-2 px-4">{contact.name}</td>
-                      <td className="py-2 px-4">{contact.phone}</td>
-                      <td className="py-2 px-4">{contact.email}</td>
-                      <td className="py-2 px-4">{contact.message}</td>
                     </tr>
                   ))}
                 </tbody>
