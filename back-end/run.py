@@ -157,16 +157,16 @@ users = {
     "regular_user": {"role": "user"}
 }
 
-@app.route('/users', methods=['GET'])
-def get_users():
-    users = User.query.all()
-    return jsonify([{
-        "id": user.id,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-        "role": user.role
-    } for user in users]), 200
+# @app.route('/users', methods=['GET'])
+# def get_users():
+#     users = User.query.all()
+#     return jsonify([{
+#         "id": user.id,
+#         "first_name": user.first_name,
+#         "last_name": user.last_name,
+#         "email": user.email,
+#         "role": user.role
+#     } for user in users]), 200
 
 
 # @app.route('/users/<int:id>', methods=['GET'])
@@ -181,21 +181,21 @@ def get_users():
 #     }), 200
 
 # Update a user by ID
-@app.route('/users/<int:id>', methods=['PUT'])
-def update_user(id):
-    user = User.query.get_or_404(id)
-    data = request.json
+# @app.route('/users/<int:id>', methods=['PUT'])
+# def update_user(id):
+#     user = User.query.get_or_404(id)
+#     data = request.json
 
-    user.first_name = data.get('first_name', user.first_name)
-    user.last_name = data.get('last_name', user.last_name)
-    user.email = data.get('email', user.email)
-    user.role = data.get('role', user.role)
+#     user.first_name = data.get('first_name', user.first_name)
+#     user.last_name = data.get('last_name', user.last_name)
+#     user.email = data.get('email', user.email)
+#     user.role = data.get('role', user.role)
 
-    if 'password' in data:
-        user.set_password(data['password'])
+#     if 'password' in data:
+#         user.set_password(data['password'])
 
-    db.session.commit()
-    return jsonify({"message": "User updated successfully"}), 200
+#     db.session.commit()
+#     return jsonify({"message": "User updated successfully"}), 200
 
 
 
@@ -314,17 +314,17 @@ def handle_integrity_error(error):
 def handle_no_result_found(error):
     return jsonify({'error': 'No result found'}), 404
 
-@app.route('/users/<id>', methods=['DELETE'])
-def delete_user(id):
-    user = User.query.get_or_404(id)
+# @app.route('/users/<id>', methods=['DELETE'])
+# def delete_user(id):
+#     user = User.query.get_or_404(id)
     
-    try:
-        db.session.delete(user)
-        db.session.commit()
-        return jsonify({"message": "User deleted successfully."}), 200
-    except:
-        db.session.rollback()
-        return jsonify({"message": "Failed to delete user."}), 500
+#     try:
+#         db.session.delete(user)
+#         db.session.commit()
+#         return jsonify({"message": "User deleted successfully."}), 200
+#     except:
+#         db.session.rollback()
+#         return jsonify({"message": "Failed to delete user."}), 500
     
 # Route for email confirmation
 @app.route('/confirm/<token>')
@@ -619,70 +619,70 @@ def delete_space(id):
     db.session.commit()
     return jsonify({'message': 'Space deleted successfully'}), 200
 
-@app.route('/create-bookings', methods=['POST', 'GET'])
-def create_bookings():
-    if request.method == 'POST':
-        data = request.get_json()
+# @app.route('/create-bookings', methods=['POST', 'GET'])
+# def create_bookings():
+#     if request.method == 'POST':
+#         data = request.get_json()
 
-        # Fetch space details from Space model
-        space = Space.query.get(data.get('space_id'))
-        if not space:
-            return jsonify({'error': 'Space not found'}), 404
+#         # Fetch space details from Space model
+#         space = Space.query.get(data.get('space_id'))
+#         if not space:
+#             return jsonify({'error': 'Space not found'}), 404
 
-        new_booking = CreateBooking(
-            first_name=data.get('firstName'),
-            last_name=data.get('lastName'),
-            email=data.get('email'),
-            phone=data.get('phone'),
-            message=data.get('message'),
-            agreement=data.get('agreement', False),
-            space_name=space.name,
-            location=space.location,
-            description=space.description,
-            price=space.price,
-            image_url=space.image_url,
-            space_id=space.id
-        )
+#         new_booking = CreateBooking(
+#             first_name=data.get('firstName'),
+#             last_name=data.get('lastName'),
+#             email=data.get('email'),
+#             phone=data.get('phone'),
+#             message=data.get('message'),
+#             agreement=data.get('agreement', False),
+#             space_name=space.name,
+#             location=space.location,
+#             description=space.description,
+#             price=space.price,
+#             image_url=space.image_url,
+#             space_id=space.id
+#         )
 
-        db.session.add(new_booking)
-        db.session.commit()
+#         db.session.add(new_booking)
+#         db.session.commit()
 
-        return jsonify({
-            'id': new_booking.id,
-            'first_name': new_booking.first_name,
-            'last_name': new_booking.last_name,
-            'email': new_booking.email,
-            'phone': new_booking.phone,
-            'message': new_booking.message,
-            'agreement': new_booking.agreement,
-            'space_name': new_booking.space_name,
-            'location': new_booking.location,
-            'description': new_booking.description,
-            'price': new_booking.price,
-            'image_url': new_booking.image_url,
-            'created_at': new_booking.created_at
-        }), 201
+#         return jsonify({
+#             'id': new_booking.id,
+#             'first_name': new_booking.first_name,
+#             'last_name': new_booking.last_name,
+#             'email': new_booking.email,
+#             'phone': new_booking.phone,
+#             'message': new_booking.message,
+#             'agreement': new_booking.agreement,
+#             'space_name': new_booking.space_name,
+#             'location': new_booking.location,
+#             'description': new_booking.description,
+#             'price': new_booking.price,
+#             'image_url': new_booking.image_url,
+#             'created_at': new_booking.created_at
+#         }), 201
 
-    elif request.method == 'GET':
-        bookings = CreateBooking.query.all()
-        return jsonify([
-            {
-                'id': booking.id,
-                'first_name': booking.first_name,
-                'last_name': booking.last_name,
-                'email': booking.email,
-                'phone': booking.phone,
-                'message': booking.message,
-                'agreement': booking.agreement,
-                'space_name': booking.space_name,
-                'location': booking.location,
-                'description': booking.description,
-                'price': booking.price,
-                'image_url': booking.image_url,
-                'created_at': booking.created_at
-            }
-            for booking in bookings
-        ]), 200
+#     elif request.method == 'GET':
+#         bookings = CreateBooking.query.all()
+#         return jsonify([
+#             {
+#                 'id': booking.id,
+#                 'first_name': booking.first_name,
+#                 'last_name': booking.last_name,
+#                 'email': booking.email,
+#                 'phone': booking.phone,
+#                 'message': booking.message,
+#                 'agreement': booking.agreement,
+#                 'space_name': booking.space_name,
+#                 'location': booking.location,
+#                 'description': booking.description,
+#                 'price': booking.price,
+#                 'image_url': booking.image_url,
+#                 'created_at': booking.created_at
+#             }
+#             for booking in bookings
+#         ]), 200
 
 
 
