@@ -271,30 +271,46 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* Booked Spaces Section */}
-          {activeSection === "bookedSpaces" && (
+         {/* Booked Spaces Section */}
+         {activeSection === "bookedSpaces" && (
             <div>
               <h2 className="text-3xl font-bold mb-6">Booked Spaces</h2>
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-gray-800 text-white">
                   <tr>
+                  <th className="py-3 px-4">Image</th>
                     <th className="py-3 px-4">Space Name</th>
-                    <th className="py-3 px-4">User</th>
-                    <th className="py-3 px-4">Booking Date</th>
+                    <th className="py-3 px-4">price</th> 
+                    <th className="py-3 px-4">location</th> 
+                    <th className="py-3 px-4">first name</th> 
+                    <th className="py-3 px-4">last name</th> 
+                    <th className="py-3 px-4">email</th>
+                    <th className="py-3 px-4">contact</th>  
+                    <th className="py-3 px-4">Price</th>
+                    <th className="py-3 px-4">paid</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookings.map((booking) => (
                     <tr key={booking.id} className="border-b hover:bg-gray-50">
+                       <td className="py-2 px-4">
+  <img src={booking.image_url} alt={booking.space_name} className="h-24 w-24 object-cover rounded-lg" />
+</td>
                       <td className="py-2 px-4">{booking.space_name}</td>
-                      <td className="py-2 px-4">{booking.user}</td>
-                      <td className="py-2 px-4">{booking.booking_date}</td>
+                      <td className="py-2 px-4">{booking.space_price}</td>
+                      <td className="py-2 px-4">{booking.location}</td>
+                      <td className="py-2 px-4">{booking.first_name}</td>
+                      <td className="py-2 px-4">{booking.last_name}</td>
+                      <td className="py-2 px-4">{booking.email}</td>
+                      <td className="py-2 px-4">{booking.phone}</td>
+                      <td className="py-2 px-4">{booking.price}</td>
+                      <td className="py-2 px-4">{booking.paid}</td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             </div>
-          )}
+          )}
 
           {/* Add Space Section */}
           {activeSection === "addSpace" && (

@@ -1,101 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../../styles.css';
-// import Navbar from './Navbar';
-// import Footer from './Footer';
-
-const usersData = [
-  {
-    userName: 'John Doe',
-    email: 'john@example.com',
-    contactInfo: '123-456-7890',
-    spaceName: 'Luxury Apartment',
-    location: 'New York',
-    isBooked: true,
-    isPaid: true,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Jane Smith',
-    email: 'jane@example.com',
-    contactInfo: '987-654-3210',
-    spaceName: 'Cozy Cottage',
-    location: 'California',
-    isBooked: false,
-    isPaid: false,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Tom Johnson',
-    email: 'tom@example.com',
-    contactInfo: '555-555-5555',
-    spaceName: 'Beach House',
-    location: 'Florida',
-    isBooked: true,
-    isPaid: false,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Emily Davis',
-    email: 'emily@example.com',
-    contactInfo: '444-444-4444',
-    spaceName: 'Mountain Cabin',
-    location: 'Colorado',
-    isBooked: false,
-    isPaid: true,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-];
-
-const additionalCards = [
-  {
-    userName: 'Booked User',
-    email: 'booked@example.com',
-    contactInfo: '555-123-4567',
-    spaceName: 'Reserved Condo',
-    location: 'Florida',
-    isBooked: true,
-    isPaid: false,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Booked User',
-    email: 'booked@example.com',
-    contactInfo: '555-123-4567',
-    spaceName: 'Reserved Condo 2',
-    location: 'Texas',
-    isBooked: true,
-    isPaid: true,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Johnson',
-    email: 'booked@example.com',
-    contactInfo: '555-123-4567',
-    spaceName: 'Reserved Condo 3',
-    location: 'Nevada',
-    isBooked: true,
-    isPaid: true,
-    imageUrl: 'https://via.placeholder.com/150'
-  },
-  {
-    userName: 'Trevor',
-    email: 'booked@example.com',
-    contactInfo: '555-123-4567',
-    spaceName: 'Reserved Condo 4',
-    location: 'Arizona',
-    isBooked: true,
-    isPaid: false,
-    imageUrl: 'https://via.placeholder.com/150'
-  }
-];
 
 const ManageUsers = () => {
+  const [usersData, setUsersData] = useState([]);
   const [filter, setFilter] = useState(null);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:5000/users'); // Adjust the API endpoint as needed
+      const data = await response.json();
+      setUsersData(data);
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   const handleFilterChange = (newFilter) => {
     setFilter(newFilter);
+  };
+
+  const handleDeleteUser = async (id) => {
+    try {
+      const response = await fetch(`http://127.0.0.1:5000/users/${id}`, {
+        method: 'DELETE',
+      });
+
+      if (response.ok) {
+        // Update the state to remove the deleted user from the list
+        setUsersData(usersData.filter(user => user.id !== id));
+        console.log('User deleted successfully');
+      } else {
+        console.error('Failed to delete user');
+      }
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
   };
 
   const getFilteredData = (data) => {
@@ -106,11 +51,9 @@ const ManageUsers = () => {
   };
 
   const filteredData = getFilteredData(usersData);
-  const filteredAdditionalCards = getFilteredData(additionalCards);
 
   return (
     <div>
-      {/* <Navbar className='navbar' /> */}
       <div className="content-container">
         <div className="heading-container">
           <h2 className="heading">Welcome to the admin Dashboard!</h2>
@@ -123,23 +66,8 @@ const ManageUsers = () => {
           <button onClick={() => navigate('/view-space')}>View Spaces</button>
         </div>
         <div className="grid-container">
-          {filter && filter === 'all' && filteredData.map((user, index) => (
+          {filter && filteredData.map((user, index) => (
             <div key={index} className='product-card'>
-              <div className="product-content">
-                <div className="product-details">
-                  <p className="product-title">{user.userName}</p>
-                  <p className="product-location">Email: {user.email}</p>
-                  <p className="product-location">Contact Info: {user.contactInfo}</p>
-                  <p className="product-location">Space Name: {user.spaceName}</p>
-                  <p className="product-location">Location: {user.location}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {filter && filter !== 'all' && filteredData.map((user, index) => (
-            <div key={index} className='product-card'>
-              <div className={`indicator ${user.isBooked ? 'bg-red' : 'bg-green'}`}></div>
               <div className="product-content">
                 <div className="image-container">
                   <img className="product-image" src={user.imageUrl} alt={user.userName} />
@@ -147,37 +75,18 @@ const ManageUsers = () => {
                 <div className="product-details">
                   <p className="product-title">{user.userName}</p>
                   <p className="product-location">Email: {user.email}</p>
-                  <p className="product-location">Contact Info: {user.contactInfo}</p>
+                  <p className="product-location">Contact: {user.contact}</p>
                   <p className="product-location">Space Name: {user.spaceName}</p>
                   <p className="product-location">Location: {user.location}</p>
                   <p className="product-location">Status: {user.isBooked ? 'Booked' : 'Available'}</p>
                   <p className="product-location">Paid: {user.isPaid ? 'Yes' : 'No'}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-
-          {filter && filter === 'booked' && filteredData.some(user => user.isBooked) && filteredAdditionalCards.map((user, index) => (
-            <div key={index + usersData.length} className='product-card'>
-              <div className="product-content">
-                <div className="image-container">
-                  <img className="product-image" src={user.imageUrl} alt={user.userName} />
-                </div>
-                <div className="product-details">
-                  <p className="product-title">{user.userName}</p>
-                  <p className="product-location">Email: {user.email}</p>
-                  <p className="product-location">Contact Info: {user.contactInfo}</p>
-                  <p className="product-location">Space Name: {user.spaceName}</p>
-                  <p className="product-location">Location: {user.location}</p>
-                  <p className="product-location">Status: {user.isBooked ? 'Booked' : 'Available'}</p>
-                  <p className="product-location">Paid: {user.isPaid ? 'Yes' : 'No'}</p>
+                  <button onClick={() => handleDeleteUser(user.id)}>Delete</button> {/* Delete button */}
                 </div>
               </div>
             </div>
           ))}
         </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 };

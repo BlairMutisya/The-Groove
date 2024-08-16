@@ -4,7 +4,7 @@ import '../../styles.css';
 // import Navbar from './Navbar';
 // import Footer from './Footer';
 
-const apiUrl = "https://fakestoreapi.com/products";
+const apiUrl = "http://127.0.0.1:5000/spaces";
 
 const ViewSpace = () => {
   const [products, setProducts] = useState([]);
@@ -51,10 +51,10 @@ const ViewSpace = () => {
               <div className={`indicator ${product.isBooked ? 'bg-red' : 'bg-green'}`}></div>
               <div className="product-content">
                 <div className="image-container">
-                  <img className="product-image" src={product.image} alt={product.title} />
+                  <img className="product-image" src={product.image_url} alt={product.name} />
                 </div>
                 <div className="product-details">
-                  <p className="product-title">{product.title}</p>
+                  <p className="product-title">{product.name}</p>
                   <p className="product-location">Location: {product.category}</p>
                   <div className="rating">
                     {[...Array(5)].map((_, index) => (

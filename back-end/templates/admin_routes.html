@@ -126,7 +126,7 @@
 </head>
 <body>
 <div class="container">
-    <h1>Loan Management API Documentation</h1>
+    <h1>Space Management API Documentation</h1>
     <nav>
         <ul>
             <li><a href="{{ url_for('serve_page', page='index') }}" {% if page == 'index' %}class="active"{% endif %}>Home</a></li>
@@ -172,7 +172,7 @@
   "name": "string, required",
   "space_type": "string, required",
   "amount": "float, required",
-  "duration_months": "integer, required"
+  
 }</pre>
             <div><strong>Response (POST/PUT/DELETE):</strong></div>
             <div>201 Created/200 OK: Success.</div>
@@ -279,5 +279,4 @@
         
         </div> <!-- .container -->
         </body>
-        </html>
-        
+        </html>

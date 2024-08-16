@@ -4,7 +4,7 @@ import Footer from "../client/Footer";
 import Navbar from "../client/Navbar";
 
 const apiUrl = "http://localhost:5000/spaces";
-const bookingUrl = "http://localhost:5000/create-bookings"; 
+const bookingUrl = "http://127.0.0.1:5000/create-bookings"; 
 
 const SpaceDetails = () => {
   const { id } = useParams();
@@ -47,24 +47,34 @@ const SpaceDetails = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
+      const bookingData = {
+        ...formData,
+        space_id: space.id, // include space_id
+        space_name: space.name, // include space name
+        location: space.location, // include space location
+        description: space.description, // include space description
+        price: space.price, // include space price
+        image_url: space.image_url, // include space image URL
+      };
+  
       const response = await fetch(bookingUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(bookingData),
       });
-
+  
       if (!response.ok) {
         throw new Error("Failed to create booking");
       }
-
+  
       const result = await response.json();
       console.log("Booking created:", result);
       alert("Booking created successfully!");
-
+  
       // Optionally, you can reset the form after submission
       setFormData({
         firstName: "",
@@ -79,6 +89,9 @@ const SpaceDetails = () => {
       alert("Error creating booking. Please try again.");
     }
   };
+  
+
+     
 
   if (error) return <div>Error: {error}</div>;
 

@@ -63,13 +63,14 @@ class Space(db.Model):
     location = db.Column(db.String(200), nullable=False)
     description = db.Column(db.Text, nullable=False)
     rating = db.Column(db.Float, nullable=True)
-    price = db.Column(db.Float, nullable=False) 
+    price = db.Column(db.Float, nullable=False)
     status = db.Column(db.String(10), nullable=False)
     image_url = db.Column(db.String(200), nullable=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     bookings = db.relationship('BookedSpace', backref='space', lazy=True)
     reviews = db.relationship('Review', backref='space', lazy=True)
     role = db.Column(db.String(20), default='admin')
+
 
 class BookedSpace(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -80,11 +81,12 @@ class BookedSpace(db.Model):
     email = db.Column(db.String(100), nullable=False)
     contact = db.Column(db.String(50), nullable=False)
     space_name = db.Column(db.String(100), nullable=False)
-    price = db.Column(db.Float, nullable=False) 
+    price = db.Column(db.Float, nullable=False)
     location = db.Column(db.String(200), nullable=False)
     image_url = db.Column(db.String(200), nullable=True)
     status = db.Column(db.String(10), nullable=False)
     paid = db.Column(db.Boolean, default=False)
+
     # start_time = db.Column(db.DateTime, nullable=False)
     # end_time = db.Column(db.DateTime, nullable=False)
 
@@ -120,10 +122,16 @@ class CreateBooking(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(100), nullable=False)
     last_name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    phone = db.Column(db.String(20), nullable=False)
+    email = db.Column(db.String(120), nullable=False)
+    phone = db.Column(db.String(15), nullable=False)
     message = db.Column(db.Text, nullable=True)
     agreement = db.Column(db.Boolean, default=False)
+    space_name = db.Column(db.String(100), nullable=False)
+    location = db.Column(db.String(200), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    image_url = db.Column(db.String(200), nullable=True)
+    space_id = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     def __repr__(self):
@@ -266,6 +274,19 @@ def confirm_email(token):
         # Redirect to the client-side sign-in page even if the link is invalid
         return redirect('http://localhost:3000/signin')
 
+@app.route('/')
+@app.route('/<page>')
+def serve_page(page=None):
+    if page is None or page == 'home':
+        return render_template('home.html')
+    elif page == 'user_routes':
+        return render_template('user_routes.html')
+    elif page == 'admin_routes':
+        return render_template('admin_routes.html')
+    elif page == 'authorization_routes':
+        return render_template('authorization_routes.html')
+    else:
+        return jsonify({"message": "Page Not Found"}), 404
 # Homepage route
 @app.route('/')
 def home():
@@ -283,7 +304,7 @@ def validate_password(password):
     if not re.search(r'[\W_]', password):
         return "Password must contain at least one special character."
     return None
-@app.route('/signup', methods=['POST'])
+@app.route('/signup', methods=['POST', 'GET'])
 
 def signup():
     data = request.json
@@ -383,6 +404,55 @@ def admin_required(fn):
 
     return wrapper
 
+# Get all users
+@app.route('/users', methods=['GET'])
+def get_users():
+    users = User.query.all()
+    return jsonify([{
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "role": user.role
+    } for user in users]), 200
+
+# Get a user by ID
+@app.route('/users/<int:id>', methods=['GET'])
+def get_user(id):
+    user = User.query.get_or_404(id)
+    return jsonify({
+        "id": user.id,
+        "first_name": user.first_name,
+        "last_name": user.last_name,
+        "email": user.email,
+        "role": user.role
+    }), 200
+
+# Update a user by ID
+@app.route('/users/<int:id>', methods=['PUT'])
+def update_user(id):
+    user = User.query.get_or_404(id)
+    data = request.json
+
+    user.first_name = data.get('first_name', user.first_name)
+    user.last_name = data.get('last_name', user.last_name)
+    user.email = data.get('email', user.email)
+    user.role = data.get('role', user.role)
+
+    if 'password' in data:
+        user.set_password(data['password'])
+
+    db.session.commit()
+    return jsonify({"message": "User updated successfully"}), 200
+
+# Delete a user by ID
+@app.route('/users/<int:id>', methods=['DELETE'])
+def delete_user(id):
+    user = User.query.get_or_404(id)
+    db.session.delete(user)
+    db.session.commit()
+    return jsonify({"message": "User deleted successfully"}), 200
+
 # Space CRUD operations
 @app.route('/spaces', methods=['GET'])
 def get_spaces():
@@ -446,7 +516,7 @@ def create_space():
     db.session.commit()
     return jsonify({'message': 'Space created successfully'}), 201
 
-@app.route('/spaces/<int:id>', methods=['PUT'])
+@app.route('/spaces/<int:id>', methods=['UPDATE'])
 @admin_required
 def update_space(id):
     data = request.json
@@ -465,59 +535,85 @@ def update_space(id):
 
 
 @app.route('/spaces/<int:id>', methods=['DELETE'])
-@admin_required
+# @admin_required
 def delete_space(id):
     space = Space.query.get_or_404(id)
     db.session.delete(space)
     db.session.commit()
     return jsonify({'message': 'Space deleted successfully'}), 200
 
-# Booking CRUD operations
-@app.route('/bookings', methods=['POST', ])
-@login_required
-def create_booking():
-    data = request.json
-    space_id = data.get('space_id')
-    # start_time = data.get('start_time')
-    # end_time = data.get('end_time')
-    user_first_name = data.get('user_first_name')
-    user_last_name = data.get('user_last_name')
-    email = data.get('email')
-    contact = data.get('contact')
-    space_name = data.get('space_name')
-    location = data.get('location')
-    image_url = data.get('image_url')
-    status = data.get('status')
-    paid = data.get('paid', False)
+@app.route('/create-bookings', methods=['POST', 'GET'])
+def create_bookings():
+    if request.method == 'POST':
+        data = request.get_json()
 
-    if not all([space_id,  user_first_name, user_last_name, email, contact]):
-        return jsonify({'error': 'Missing required fields'}), 400
+        # Fetch space details from Space model
+        space = Space.query.get(data.get('space_id'))
+        if not space:
+            return jsonify({'error': 'Space not found'}), 404
 
-    booking = BookedSpace(
-        user_id=current_user.id,
-        space_id=space_id,
-        user_first_name=user_first_name,
-        user_last_name=user_last_name,
-        email=email,
-        contact=contact,
-        space_name=space_name,
-        location=location,
-        image_url=image_url,
-        status=status,
-        paid=paid,
-        # start_time=datetime.fromisoformat(start_time),
-        # end_time=datetime.fromisoformat(end_time)
-    )
+        new_booking = CreateBooking(
+            first_name=data.get('firstName'),
+            last_name=data.get('lastName'),
+            email=data.get('email'),
+            phone=data.get('phone'),
+            message=data.get('message'),
+            agreement=data.get('agreement', False),
+            space_name=space.name,
+            location=space.location,
+            description=space.description,
+            price=space.price,
+            image_url=space.image_url,
+            space_id=space.id
+        )
 
-    db.session.add(booking)
-    db.session.commit()
-    return jsonify({'message': 'Booking created successfully'}), 201
+        db.session.add(new_booking)
+        db.session.commit()
+
+        return jsonify({
+            'id': new_booking.id,
+            'first_name': new_booking.first_name,
+            'last_name': new_booking.last_name,
+            'email': new_booking.email,
+            'phone': new_booking.phone,
+            'message': new_booking.message,
+            'agreement': new_booking.agreement,
+            'space_name': new_booking.space_name,
+            'location': new_booking.location,
+            'description': new_booking.description,
+            'price': new_booking.price,
+            'image_url': new_booking.image_url,
+            'created_at': new_booking.created_at
+        }), 201
+
+    elif request.method == 'GET':
+        bookings = CreateBooking.query.all()
+        return jsonify([
+            {
+                'id': booking.id,
+                'first_name': booking.first_name,
+                'last_name': booking.last_name,
+                'email': booking.email,
+                'phone': booking.phone,
+                'message': booking.message,
+                'agreement': booking.agreement,
+                'space_name': booking.space_name,
+                'location': booking.location,
+                'description': booking.description,
+                'price': booking.price,
+                'image_url': booking.image_url,
+                'created_at': booking.created_at
+            }
+            for booking in bookings
+        ]), 200
+
+
 
 @app.route('/bookings/<int:id>', methods=['GET'])
-@login_required
+# @login_required
 def get_booking(id):
     booking = BookedSpace.query.get_or_404(id)
-    return jsonify({
+    response = {
         'id': booking.id,
         'user_id': booking.user_id,
         'space_id': booking.space_id,
@@ -529,13 +625,12 @@ def get_booking(id):
         'location': booking.location,
         'image_url': booking.image_url,
         'status': booking.status,
-        'paid': booking.paid,
-        'start_time': booking.start_time.isoformat(),
-        'end_time': booking.end_time.isoformat()
-    }), 200
+        'paid': booking.paid
+    }
+    return jsonify(response), 200
 
 @app.route('/bookings/<int:id>', methods=['DELETE'])
-@login_required
+# @login_required
 def delete_booking(id):
     booking = BookedSpace.query.get_or_404(id)
     db.session.delete(booking)
@@ -544,7 +639,7 @@ def delete_booking(id):
 
 # Payment CRUD operations
 @app.route('/payments', methods=['POST'])
-@login_required
+# @login_required
 def create_payment():
     data = request.json
     booking_id = data.get('booking_id')
@@ -706,32 +801,32 @@ def get_contacts():
     ]), 200
 
 
-@app.route('/create-bookings', methods=['POST'])
-def create_bookings():
-    data = request.get_json()
+# @app.route('/create-bookings', methods=['POST'])
+# def create_bookings():
+#     data = request.get_json()
     
-    new_booking = CreateBooking(
-        first_name=data.get('firstName'),
-        last_name=data.get('lastName'),
-        email=data.get('email'),
-        phone=data.get('phone'),
-        message=data.get('message'),
-        agreement=data.get('agreement', False)  
-    )
+#     new_booking = CreateBooking(
+#         first_name=data.get('firstName'),
+#         last_name=data.get('lastName'),
+#         email=data.get('email'),
+#         phone=data.get('phone'),
+#         message=data.get('message'),
+#         agreement=data.get('agreement', False)  
+#     )
     
-    db.session.add(new_booking)
-    db.session.commit()
+#     db.session.add(new_booking)
+#     db.session.commit()
     
-    return jsonify({
-        'id': new_booking.id,
-        'first_name': new_booking.first_name,
-        'last_name': new_booking.last_name,
-        'email': new_booking.email,
-        'phone': new_booking.phone,
-        'message': new_booking.message,
-        'agreement': new_booking.agreement,
-        'created_at': new_booking.created_at
-    }), 201
+#     return jsonify({
+#         'id': new_booking.id,
+#         'first_name': new_booking.first_name,
+#         'last_name': new_booking.last_name,
+#         'email': new_booking.email,
+#         'phone': new_booking.phone,
+#         'message': new_booking.message,
+#         'agreement': new_booking.agreement,
+#         'created_at': new_booking.created_at
+#     }), 201
 
 if __name__ == '__main__':
     app.run(debug=True)
