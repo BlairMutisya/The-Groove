@@ -13,7 +13,7 @@ const ManageUsers = () => {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch('http://127.0.0.1:5000/users'); // Adjust the API endpoint as needed
+      const response = await fetch("https://the-groove.onrender.com/users"); // Adjust the API endpoint as needed
       const data = await response.json();
       setUsersData(data);
     } catch (error) {
@@ -27,9 +27,12 @@ const ManageUsers = () => {
 
   const handleDeleteUser = async (id) => {
     try {
-      const response = await fetch(`http://127.0.0.1:5000/users/${id}`, {
-        method: 'DELETE',
-      });
+      const response = await fetch(
+        `https://the-groove.onrender.com/users/${id}`,
+        {
+          method: "DELETE",
+        }
+      );
 
       if (response.ok) {
         // Update the state to remove the deleted user from the list

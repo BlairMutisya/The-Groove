@@ -4,7 +4,7 @@ import '../../styles.css';
 // import Navbar from './Navbar';
 // import Footer from './Footer';
 
-const apiUrl = "http://127.0.0.1:5000/spaces";
+const apiUrl = "https://the-groove.onrender.com/spaces";
 
 const ViewSpace = () => {
   const [products, setProducts] = useState([]);
