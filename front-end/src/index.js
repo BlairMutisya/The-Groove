@@ -17,7 +17,7 @@ import AddSpace from "./components/admin/AddSpace";
 import ManageUsers from "./components/admin/ManageUsers";
 import ViewSpace from "./components/admin/ViewSpace";
 import Dashboard from "./components/admin/Dashboard";
-
+import PaymentForm from "./components/client/BillingAndPayment";
 // const PUBLISHABLE_KEY =
 //   "pk_test_ZmFpci1sZW1taW5nLTc1LmNsZXJrLmFjY291bnRzLmRldiQ";
 
@@ -129,6 +129,14 @@ const router = createBrowserRouter([
     element: (
       <div>
         <Dashboard />
+      </div>
+    ),
+  },
+    {
+    path: "/payment",
+    element: (
+      <div>
+        <PaymentForm />
       </div>
     ),
   },

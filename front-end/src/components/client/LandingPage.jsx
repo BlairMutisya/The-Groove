@@ -116,7 +116,7 @@ const LandingPage = () => {
             </h1>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
-            {products.slice(0, 4).map((space) => (
+            {products.slice(0, 6).map((space) => (
               <div key={space.id} className="border-slate-950 border-b-2">
                 <div className="flex bg-[#fff3e5] p-4 mb-8">
                   <div className="w-[250px]">
@@ -151,57 +151,6 @@ const LandingPage = () => {
                       ))}
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div className="flex  mt-11 space-y-8">
-          {/* Single Card Section */}
-          <div className="w-full  flex justify-center mt-20">
-            <div className="h-full">
-              <div className="w-96 bg-[#FEFEFE] shadow-md hover:scale-105 duration-500 py-2 rounded-lg flex items-center">
-                <div class="flex-shrink-0 ml-12 mt-4">
-                  <img
-                    class="w-14 h-14 rounded-full object-cover"
-                    src="https://img.freepik.com/free-photo/young-handsome-african-business-man-posing-isolated_231208-5502.jpg?uid=R157253250&semt=sph"
-                    alt="Neil image"
-                  />
-                </div>
-                <div class="flex-1 min-w-0 ms-4">
-                  <p class="text-sm font-medium text-gray-900 truncate dark:text-black">
-                    Neil Sims
-                  </p>
-                  <p class="text-sm text-gray-500 truncate dark:text-gray-400">
-                    email@windster.com
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Multiple Cards Section */}
-          <div className="bg-[#fce8cf] w-full h-auto flex flex-wrap justify-center gap-6 py-8">
-            {[1, 2, 3, 4].map((_, item) => (
-              <div
-                key={item}
-                className="w-80 bg-[#FEFEFE] shadow-md hover:scale-105 duration-300 py-4 px-4 rounded-lg flex items-center"
-              >
-                <div className="flex-shrink-0 ml-4">
-                  <img
-                    className="w-12 h-12 rounded-full object-cover"
-                    src="https://img.freepik.com/free-photo/young-handsome-african-business-man-posing-isolated_231208-5502.jpg?uid=R157253250&semt=sph"
-                    alt="Neil image"
-                  />
-                </div>
-                <div className="flex-1 min-w-0 ms-4">
-                  <p className="text-sm font-medium text-gray-900 truncate">
-                    Neil Sims
-                  </p>
-                  <p className="text-xs text-gray-500 truncate">
-                    email@windster.com
-                  </p>
                 </div>
               </div>
             ))}

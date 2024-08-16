@@ -69,7 +69,7 @@ const Contact = () => {
           {/* Left Image Section */}
           <div className="w-full md:w-1/2 h-auto">
             <img
-              src="https://i.pinimg.com/736x/3d/3b/f1/3d3bf125f457d91d6433cf92668c9d8c.jpg"
+              src="https://i.pinimg.com/736x/8e/31/60/8e3160fe402d950746a6342e54dd0a2e.jpg"
               alt="Branding"
               className="w-full h-full object-cover"
             />

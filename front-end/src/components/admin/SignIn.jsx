@@ -15,30 +15,30 @@ function AdminSignIn() {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://localhost:5000/signin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  try {
+    const response = await fetch("http://localhost:5000/signin", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    });
 
-      const data = await response.json();
+    const data = await response.json();
 
-      if (response.ok && data.role === "admin") {
-        // Store token and redirect to admin dashboard
-        localStorage.setItem("token", data.token);
-        // Redirect to the admin dashboard or another admin-specific page
-      navigate("/addspace");
-      } else {
-        setError("Invalid credentials or not an admin.");
-      }
-    } catch (error) {
-      console.error("Login error:", error);
-      setError("An error occurred. Please try again.");
+    if (response.ok && data.role === "admin") {
+      // Store token and redirect to admin dashboard
+      localStorage.setItem("token", data.token);
+      // Redirect to the admin dashboard
+      navigate("/dashboard"); // Use relative path
+    } else {
+      setError("Invalid credentials or not an admin.");
     }
-  };
+  } catch (error) {
+    console.error("Login error:", error);
+    setError("An error occurred. Please try again.");
+  }
+};
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-center bg-no-repeat bg-cover bg-[url('https://static.dezeen.com/uploads/2023/02/the-lymbar_gin-design-group_leonid-furmansky_dezeen_2364_col_15.jpg')]">
