@@ -7,24 +7,20 @@ from flask_cors import CORS
 from models import db  # Ensure your models are imported correctly
 
 app = Flask(__name__)
+app.config.from_object('config')  # Load your configuration
 
-
-
-
-app = Flask(__name__)
-app.config.from_object('config')
-
-db.init_app()
+# Initialize extensions
+db.init_app(app)
 CORS(app)  # You can customize CORS here if needed
-
-app.config.from_object('config')
-
-db = SQLAlchemy(app)
 mail = Mail(app)
 login_manager = LoginManager(app)
+
 # Initialize the serializer with your app's secret key
 serializer = URLSafeTimedSerializer(app.config['SECRET_KEY'])
-from run import app # Import routes after app is created
+
+# Import routes after app is created
+from run import app
+
 # Create tables in the database
 with app.app_context():
     db.create_all()
