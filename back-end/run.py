@@ -168,17 +168,17 @@ def get_users():
         "role": user.role
     } for user in users]), 200
 
-# Get a user by ID
-@app.route('/users/<int:id>', methods=['GET'])
-def get_user(id):
-    user = User.query.get_or_404(id)
-    return jsonify({
-        "id": user.id,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-        "role": user.role
-    }), 200
+
+# @app.route('/users/<int:id>', methods=['GET'])
+# def get_user(id):
+#     user = User.query.get_or_404(id)
+#     return jsonify({
+#         "id": user.id,
+#         "first_name": user.first_name,
+#         "last_name": user.last_name,
+#         "email": user.email,
+#         "role": user.role
+#     }), 200
 
 # Update a user by ID
 @app.route('/users/<int:id>', methods=['PUT'])
@@ -492,17 +492,17 @@ def get_users():
         "role": user.role
     } for user in users]), 200
 
-# Get a user by ID
-@app.route('/users/<int:id>', methods=['GET'])
-def get_user(id):
-    user = User.query.get_or_404(id)
-    return jsonify({
-        "id": user.id,
-        "first_name": user.first_name,
-        "last_name": user.last_name,
-        "email": user.email,
-        "role": user.role
-    }), 200
+# # Get a user by ID
+# @app.route('/users/<int:id>', methods=['GET'])
+# def get_user(id):
+#     user = User.query.get_or_404(id)
+#     return jsonify({
+#         "id": user.id,
+#         "first_name": user.first_name,
+#         "last_name": user.last_name,
+#         "email": user.email,
+#         "role": user.role
+#     }), 200
 
 # Update a user by ID
 @app.route('/users/<int:id>', methods=['PUT'])
