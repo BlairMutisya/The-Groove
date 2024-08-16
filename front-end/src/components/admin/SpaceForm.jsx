@@ -42,8 +42,8 @@ const SpaceForm = ({ spaceId, initialData, isUpdating, onCancel }) => {
 
     try {
       const url = isUpdating
-        ? `http://localhost:5000/spaces/${spaceId}`
-        : "http://localhost:5000/spaces";
+        ? `https://the-groove.onrender.com/${spaceId}`
+        : "https://the-groove.onrender.com";
 
       const method = isUpdating ? "PUT" : "POST";
 
