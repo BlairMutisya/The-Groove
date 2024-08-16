@@ -50,7 +50,7 @@ const SpaceList = () => {
               {/* Dot indicator for availability */}
               <div
                 className={`absolute top-4 right-4 w-4 h-4 rounded-full ${
-                  space.status === "Available" ? "bg-red-500" : "bg-green-500"
+                  space.status === "Available" ? "bg-green-500" : "bg-red-500" 
                 }`}
               ></div>
 

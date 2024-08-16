@@ -84,6 +84,7 @@ class Contact(db.Model):
     phone_number = db.Column(db.Integer, nullable=False)
     message = db.Column(db.Text, nullable=False)
     # help = db.Column(db.Text, nullable=False)
+    read = db.Column(db.Boolean, default=False)
 
 class CreateBooking(db.Model):
     id = db.Column(db.Integer, primary_key=True)

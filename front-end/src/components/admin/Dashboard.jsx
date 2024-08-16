@@ -9,6 +9,7 @@ const Dashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [contacts, setContacts] = useState([]);
   const [unreadMessages, setUnreadMessages] = useState(0);
+
   const [newSpace, setNewSpace] = useState({
     name: "",
     description: "",
@@ -146,7 +147,6 @@ const Dashboard = () => {
 
       // Handle successful logout
       console.log("Logged out successfully");
-      // Redirect to login page or perform other actions
       navigate("/");
     } catch (error) {
       console.error("Failed to log out:", error);
@@ -200,6 +200,22 @@ const Dashboard = () => {
     }
   };
 
+  const handleMarkAsRead = async (id) => {
+    const response = await fetch(`http://localhost:5000/contacts/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ read: true }),
+    });
+
+    if (response.ok) {
+      fetchContacts(); // Refresh contact list
+    } else {
+      alert("Failed to mark as read.");
+    }
+  };
+
   return (
     <div className="flex h-screen bg-gray-100">
       {/* Sidebar */}
@@ -245,7 +261,12 @@ const Dashboard = () => {
               }`}
               onClick={() => setActiveSection("contacted")}
             >
-              Contacted
+              Contacted{" "}
+              {unreadMessages > 0 && (
+                <span className="ml-2 text-red-600 font-bold">
+                  ({unreadMessages} new)
+                </span>
+              )}
             </li>
           </ul>
         </nav>
@@ -263,18 +284,22 @@ const Dashboard = () => {
               onChange={handleSearch}
               className="w-full px-4 py-2 border rounded-lg"
             />
-            <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500" />
+            <FaSearch className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-600" />
           </div>
-
-          <FaSignOutAlt
-            className="text-gray-600 cursor-pointer"
-            onClick={handleLogout}
-          />
+          <div className="flex items-center">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-2"
+              onClick={handleLogout}
+            >
+              <FaSignOutAlt className="inline mr-1" />
+              Logout
+            </button>
+          </div>
         </header>
 
         {/* Content */}
-        <div className="flex-1 p-8 overflow-y-auto">
-          {/* View All Spaces Section */}
+        <div className="p-6 flex-1">
+          {/* All Spaces Section */}
           {activeSection === "allSpaces" && (
             <div>
               <h2 className="text-3xl font-bold mb-6">All Spaces</h2>
@@ -282,7 +307,6 @@ const Dashboard = () => {
                 <thead className="bg-[#fce8d0] text-black">
                   <tr>
                     <th className="py-3 px-4">Name</th>
-                    <th className="py-3 px-4">Description</th>
                     <th className="py-3 px-4">Location</th>
                     <th className="py-3 px-4">Price</th>
                     <th className="py-3 px-4">Status</th>
@@ -292,120 +316,25 @@ const Dashboard = () => {
                 </thead>
                 <tbody>
                   {filteredSpaces.map((space) => (
-                    <tr
-                      key={space.id}
-                      className="relative group hover:bg-gray-100"
-                    >
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="name"
-                            value={editableSpace.name || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.name
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="description"
-                            value={editableSpace.description || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.description
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="location"
-                            value={editableSpace.location || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.location
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="price"
-                            value={editableSpace.price || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.price
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="status"
-                            value={editableSpace.status || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.status
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <input
-                            type="text"
-                            name="rating"
-                            value={editableSpace.rating || ""}
-                            onChange={handleInputChange}
-                            className="border px-2 py-1"
-                          />
-                        ) : (
-                          space.rating
-                        )}
-                      </td>
-                      <td className="py-2 px-4">
-                        {editableSpace && editableSpace.id === space.id ? (
-                          <>
-                            <button
-                              onClick={handleUpdate}
-                              className="text-green-600 hover:text-green-800"
-                            >
-                              <FaCheck />
-                            </button>
-                            <button
-                              onClick={() => setEditableSpace(null)}
-                              className="text-red-600 hover:text-red-800 ml-2"
-                            >
-                              Cancel
-                            </button>
-                          </>
-                        ) : (
-                          <>
-                            <button
-                              onClick={() => handleUpdateClick(space)}
-                              className="text-blue-600 hover:text-blue-800"
-                            >
-                              Edit
-                            </button>
-                            <button
-                              onClick={() => handleDelete(space.id)}
-                              className="text-red-600 hover:text-red-800 ml-4"
-                            >
-                              Delete
-                            </button>
-                          </>
-                        )}
+                    <tr key={space.id} className="border-t">
+                      <td className="py-3 px-4">{space.name}</td>
+                      <td className="py-3 px-4">{space.location}</td>
+                      <td className="py-3 px-4">${space.price}</td>
+                      <td className="py-3 px-4">{space.status}</td>
+                      <td className="py-3 px-4">{space.rating}</td>
+                      <td className="py-3 px-4">
+                        <button
+                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
+                          onClick={() => handleUpdateClick(space)}
+                        >
+                          Update
+                        </button>
+                        <button
+                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                          onClick={() => handleDelete(space.id)}
+                        >
+                          Delete
+                        </button>
                       </td>
                     </tr>
                   ))}
@@ -414,109 +343,26 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* Add Space Section */}
-          {activeSection === "addSpace" && (
+          {/* All Users Section */}
+          {activeSection === "allUsers" && (
             <div>
-              <h2 className="text-3xl font-bold mb-6">Add New Space</h2>
-              <form onSubmit={addSpace} className="space-y-4">
-                <input
-                  type="text"
-                  name="name"
-                  value={newSpace.name}
-                  onChange={handleInputChange}
-                  placeholder="Name"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="description"
-                  value={newSpace.description}
-                  onChange={handleInputChange}
-                  placeholder="Description"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="location"
-                  value={newSpace.location}
-                  onChange={handleInputChange}
-                  placeholder="Location"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="price"
-                  value={newSpace.price}
-                  onChange={handleInputChange}
-                  placeholder="Price"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="image_url"
-                  value={newSpace.image_url}
-                  onChange={handleInputChange}
-                  placeholder="Image URL"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="status"
-                  value={newSpace.status}
-                  onChange={handleInputChange}
-                  placeholder="Status"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="rating"
-                  value={newSpace.rating}
-                  onChange={handleInputChange}
-                  placeholder="Rating"
-                  className="border px-4 py-2 w-full"
-                />
-                <input
-                  type="text"
-                  name="user_id"
-                  value={newSpace.user_id}
-                  onChange={handleInputChange}
-                  placeholder="User ID"
-                  className="border px-4 py-2 w-full"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-500 text-white px-4 py-2 rounded"
-                >
-                  Add Space
-                </button>
-              </form>
-            </div>
-          )}
-
-          {/* Contacted Section */}
-          {activeSection === "contacted" && (
-            <div>
-              <h2 className="text-3xl font-bold mb-6">
-                Contacted ({unreadMessages})
-              </h2>
+              <h2 className="text-3xl font-bold mb-6">All Users</h2>
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-[#fce8d0] text-black">
                   <tr>
-                    <th className="py-3 px-4">ID</th>
-                    <th className="py-3 px-4">Name</th>
-                    <th className="py-3 px-4">Phone</th>
+                    <th className="py-3 px-4">First Name</th>
+                    <th className="py-3 px-4">Last Name</th>
                     <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Message</th>
+                    <th className="py-3 px-4">Role</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {contacts.map((contact) => (
-                    <tr key={contact.id}>
-                      <td className="py-2 px-4">{contact.id}</td>
-                      <td className="py-2 px-4">{contact.name}</td>
-                      <td className="py-2 px-4">{contact.phone}</td>
-                      <td className="py-2 px-4">{contact.email}</td>
-                      <td className="py-2 px-4">{contact.message}</td>
+                  {users.map((user) => (
+                    <tr key={user.id} className="border-t">
+                      <td className="py-3 px-4">{user.first_name}</td>
+                      <td className="py-3 px-4">{user.last_name}</td>
+                      <td className="py-3 px-4">{user.email}</td>
+                      <td className="py-3 px-4">{user.role}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -531,19 +377,33 @@ const Dashboard = () => {
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-[#fce8d0] text-black">
                   <tr>
-                    <th className="py-3 px-4">Booking ID</th>
+                    <th className="py-3 px-4">First Name</th>
+                    <th className="py-3 px-4">Last Name</th>
                     <th className="py-3 px-4">Space Name</th>
-                    <th className="py-3 px-4">User Name</th>
-                    <th className="py-3 px-4">Date</th>
+                    <th className="py-3 px-4">Location</th>
+                    <th className="py-3 px-4">Contact</th>
+                    <th className="py-3 px-4">Message</th>
+                    <th className="py-3 px-4">Terms</th>
+                    <th className="py-3 px-4">Price</th>
+                    <th className="py-3 px-4">Booking Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {bookings.map((booking) => (
-                    <tr key={booking.id}>
-                      <td className="py-2 px-4">{booking.id}</td>
-                      <td className="py-2 px-4">{booking.spaceName}</td>
-                      <td className="py-2 px-4">{booking.userName}</td>
-                      <td className="py-2 px-4">{booking.date}</td>
+                    <tr key={booking.id} className="border-t">
+                      <td className="py-3 px-4">{booking.first_name}</td>
+                      <td className="py-3 px-4">{booking.last_name}</td>
+                      <td className="py-3 px-4">{booking.space_name}</td>
+                      <td className="py-3 px-4">{booking.location}</td>
+                      <td className="py-3 px-4">{booking.phone}</td>
+                      <td className="py-3 px-4">{booking.message}</td>
+                      <td className="py-3 px-4">
+                        {booking.agreement ? "Agreed" : "Not Agreed"}
+                      </td>
+                      <td className="py-3 px-4">{booking.price}</td>
+                      <td className="py-3 px-4">{booking.created_at}</td>
+                      {/* <td className="py-3 px-4">
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
@@ -551,26 +411,137 @@ const Dashboard = () => {
             </div>
           )}
 
-          {/* View All Users Section */}
-          {activeSection === "allUsers" && (
+          {/* Add Space Section */}
+          {activeSection === "addSpace" && (
             <div>
-              <h2 className="text-3xl font-bold mb-6">All Users</h2>
+              <h2 className="text-3xl font-bold mb-6">
+                {editableSpace ? "Update Space" : "Add Space"}
+              </h2>
+              <form onSubmit={editableSpace ? handleUpdate : addSpace}>
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    value={editableSpace ? editableSpace.name : newSpace.name}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="Location"
+                    value={
+                      editableSpace ? editableSpace.location : newSpace.location
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    name="description"
+                    placeholder="Description"
+                    value={
+                      editableSpace
+                        ? editableSpace.description
+                        : newSpace.description
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="number"
+                    name="price"
+                    placeholder="Price"
+                    value={editableSpace ? editableSpace.price : newSpace.price}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    name="image_url"
+                    placeholder="Image URL"
+                    value={
+                      editableSpace
+                        ? editableSpace.image_url
+                        : newSpace.image_url
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    name="rating"
+                    placeholder="Rating"
+                    value={
+                      editableSpace ? editableSpace.rating : newSpace.rating
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <input
+                    type="text"
+                    name="user_id"
+                    placeholder="User ID"
+                    value={
+                      editableSpace ? editableSpace.user_id : newSpace.user_id
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  />
+                  <select
+                    name="status"
+                    value={
+                      editableSpace ? editableSpace.status : newSpace.status
+                    }
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-lg"
+                  >
+                    <option value="Available">Available</option>
+                    <option value="Booked">Unavailable</option>
+                  </select>
+                </div>
+                <button
+                  type="submit"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-4"
+                >
+                  {editableSpace ? "Update Space" : "Add Space"}
+                </button>
+              </form>
+            </div>
+          )}
+
+          {/* Contacted Section */}
+          {activeSection === "contacted" && (
+            <div>
+              <h2 className="text-3xl font-bold mb-6">Contacted Messages</h2>
               <table className="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
                 <thead className="bg-[#fce8d0] text-black">
                   <tr>
-                    <th className="py-3 px-4">ID</th>
                     <th className="py-3 px-4">Name</th>
+                    <th className="py-3 px-4">Phone</th>
                     <th className="py-3 px-4">Email</th>
-                    <th className="py-3 px-4">Role</th>
+                    <th className="py-3 px-4">Message</th>
+                    <th className="py-3 px-4">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {users.map((user) => (
-                    <tr key={user.id}>
-                      <td className="py-2 px-4">{user.id}</td>
-                      <td className="py-2 px-4">{user.name}</td>
-                      <td className="py-2 px-4">{user.email}</td>
-                      <td className="py-2 px-4">{user.role}</td>
+                  {contacts.map((contact) => (
+                    <tr key={contact.id} className="border-t">
+                      <td className="py-3 px-4">{contact.name}</td>
+                      <td className="py-3 px-4">{contact.phone}</td>
+                      <td className="py-3 px-4">{contact.email}</td>
+                      <td className="py-3 px-4">{contact.message}</td>
+                      <td className="py-3 px-4">
+                        {!contact.read && (
+                          <button
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded"
+                            onClick={() => handleMarkAsRead(contact.id)}
+                          >
+                            <FaCheck className="inline mr-1" /> Mark as Read
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
