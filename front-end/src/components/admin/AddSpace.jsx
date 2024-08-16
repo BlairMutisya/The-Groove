@@ -26,7 +26,7 @@ const AddSpace = () => {
     data.append("image", formData.image);
 
     try {
-      const response = await fetch("http://127.0.0.1:5000/spaces", {
+      const response = await fetch("https://the-groove.onrender.com/spaces", {
         method: "POST",
         body: data,
         headers: {

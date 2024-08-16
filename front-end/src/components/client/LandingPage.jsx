@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import Navbar from "./Navbar";
 import { Link } from "react-router-dom";
 
-const apiUrl = "http://localhost:5000/spaces";
+const apiUrl = "https://the-groove.onrender.com/spaces";
 
 const LandingPage = () => {
   const [products, setProducts] = useState([]);

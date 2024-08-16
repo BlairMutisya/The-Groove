@@ -52,13 +52,13 @@ const Dashboard = () => {
   };
 
   const fetchAllSpaces = async () => {
-    const response = await fetch("http://localhost:5000/spaces");
+    const response = await fetch("https://the-groove.onrender.com/spaces");
     const data = await response.json();
     setSpaces(data);
   };
 
   const fetchAllUsers = async () => {
-    const response = await fetch("http://localhost:5000/users");
+    const response = await fetch("https://the-groove.onrender.com/users");
     const data = await response.json();
     if (Array.isArray(data)) {
       setUsers(data);
@@ -69,7 +69,9 @@ const Dashboard = () => {
   };
 
   const fetchBookedSpaces = async () => {
-    const response = await fetch("http://localhost:5000/create-bookings");
+    const response = await fetch(
+      "https://the-groove.onrender.com/create-bookings"
+    );
     const data = await response.json();
     if (Array.isArray(data)) {
       setBookings(data);
@@ -80,7 +82,7 @@ const Dashboard = () => {
   };
 
   const fetchContacts = async () => {
-    const response = await fetch("http://localhost:5000/contacts");
+    const response = await fetch("https://the-groove.onrender.com/contacts");
     const data = await response.json();
     if (Array.isArray(data)) {
       setContacts(data);
@@ -105,7 +107,7 @@ const Dashboard = () => {
 
   const addSpace = async (e) => {
     e.preventDefault();
-    const response = await fetch("http://localhost:5000/spaces", {
+    const response = await fetch("https://the-groove.onrender.com/spaces", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -133,7 +135,7 @@ const Dashboard = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await fetch("http://localhost:5000/logout", {
+      const response = await fetch("https://the-groove.onrender.com/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -162,7 +164,7 @@ const Dashboard = () => {
   );
 
   const handleDelete = async (id) => {
-    const response = await fetch(`http://localhost:5000/spaces/${id}`, {
+    const response = await fetch(`https://the-groove.onrender.com/spaces/${id}`, {
       method: "DELETE",
     });
     if (response.ok) {
@@ -181,7 +183,7 @@ const Dashboard = () => {
     e.preventDefault();
     if (editableSpace) {
       const response = await fetch(
-        `http://localhost:5000/spaces/${editableSpace.id}`,
+        `https://the-groove.onrender.com/${editableSpace.id}`,
         {
           method: "PUT",
           headers: {
@@ -201,13 +203,16 @@ const Dashboard = () => {
   };
 
   const handleMarkAsRead = async (id) => {
-    const response = await fetch(`http://localhost:5000/contacts/${id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ read: true }),
-    });
+    const response = await fetch(
+      `https://the-groove.onrender.com/contacts/${id}`,
+      {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ read: true }),
+      }
+    );
 
     if (response.ok) {
       fetchContacts(); // Refresh contact list
