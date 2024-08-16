@@ -3,7 +3,7 @@ import Navbar from "./Navbar";
 import Footer from "../client/Footer";
 import { Link } from "react-router-dom";
 
-const apiUrl = "http://localhost:5000/spaces";
+const apiUrl = "https://the-groove.onrender.com/spaces";
 
 const SpaceList = () => {
   const [spaces, setSpaces] = useState([]);
