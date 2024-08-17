@@ -37,7 +37,7 @@ const LandingPage = () => {
             <h3 className="py-2 sm:text-5xl text-2xl font-bold pt-36 mt-24">
               DISCOVER SPACES <br /> YOU'LL LOVE TO BE IN.
             </h3>
-            <p className="py-4">
+            <p className="py-4 text-xl">
               At ChillSpaces, we believe that the right environment can
               transform your relaxation experience. Our curated collection of
               rental spaces is designed to provide the ultimate in comfort and
@@ -82,7 +82,7 @@ const LandingPage = () => {
                 to="spacelist"
                 className="text-2xl text-black font-semibold justify-center mr-10 p-20 group w-fit px-5 py-3 my-2 flex items-center rounded-lg bg-[#79a9c2] cursor-pointer transition-transform duration-300 hover:opacity-80 hover:scale-110"
               >
-                view Spaces
+                View Spaces
               </Link>
             </div>
           </div>

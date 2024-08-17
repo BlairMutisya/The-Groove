@@ -4,12 +4,15 @@ import Footer from "../client/Footer";
 import Navbar from "../client/Navbar";
 import { FaStar, FaStarHalfAlt, FaRegStar } from "react-icons/fa";
 
-const apiUrl = "https://the-groove.onrender.com/spaces";
+const apiUrl = "https://the-groove.onrender.com";
 const bookingUrl = "https://the-groove.onrender.com/create-bookings";
-const reviewUrl = "https://the-groove.onrender.com/reviews"; // URL for submitting reviews
 
+// `https://the-groove.onrender.com/spaces/${id}/reviews`;
 const SpaceDetails = () => {
   const { id } = useParams();
+
+  const reviewUrl = `https://the-groove.onrender.com/spaces/${id}/reviews`; // URL for submitting reviews
+
   const [space, setSpace] = useState(null);
   const [error, setError] = useState(null);
 
@@ -34,7 +37,7 @@ const SpaceDetails = () => {
   // Define fetchReviews outside useEffect so it can be used elsewhere
   const fetchReviews = async () => {
     try {
-      const response = await fetch(`${apiUrl}/${id}/reviews`);
+      const response = await fetch(`${apiUrl}/spaces/${id}/reviews`);
       if (!response.ok) {
         throw new Error("Reviews not found");
       }
@@ -48,7 +51,7 @@ const SpaceDetails = () => {
   useEffect(() => {
     const fetchSpace = async () => {
       try {
-        const response = await fetch(`${apiUrl}/${id}`);
+        const response = await fetch(`${apiUrl}/spaces/${id}`);
         if (!response.ok) {
           throw new Error("Space not found");
         }
@@ -114,7 +117,7 @@ const SpaceDetails = () => {
         price: space.price, // include space price
         image_url: space.image_url, // include space image URL
       };
-  
+
       const response = await fetch(bookingUrl, {
         method: "POST",
         headers: {
@@ -123,11 +126,11 @@ const SpaceDetails = () => {
         body: JSON.stringify(bookingData),
         body: JSON.stringify(bookingData),
       });
-  
+
       if (!response.ok) {
         throw new Error("Failed to create booking");
       }
-  
+
       const result = await response.json();
       console.log("Booking created:", result);
       alert("Booking created successfully!");
@@ -174,7 +177,7 @@ const SpaceDetails = () => {
         user_first_name: "",
         user_last_name: "",
         rating: 0,
-        reviewMessage: "",
+        review_message: "",
       });
 
       // Fetch updated reviews after submission
@@ -283,7 +286,7 @@ const SpaceDetails = () => {
                       type="submit"
                       className="bg-[#79a9c2] text-white py-2 px-4 rounded-lg shadow-lg ml-4 md:ml-12"
                     >
-                      Place a booking (Proceed to Payment)
+                      Place a booking
                     </button>
                   </form>
                 </div>

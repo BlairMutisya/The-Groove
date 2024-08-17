@@ -42,7 +42,6 @@ login_manager.login_view = 'signin'
 jwt = JWTManager(app)
 Session(app)
 CORS(app)
-
 # Define models
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -338,11 +337,11 @@ def confirm_email(token):
         db.session.commit()
         flash('Email confirmed! You can now log in.', 'success')
         # Redirect to the client-side sign-in page
-        return redirect('http://localhost:3000/signin')
+        return redirect('https://the-groove.vercel.app/signin')
     else:
         flash('The confirmation link is invalid or has expired.', 'danger')
         # Redirect to the client-side sign-in page even if the link is invalid
-        return redirect('http://localhost:3000/signup')
+        return redirect('https://the-groove.vercel.app/signup')
 
 def create_token(user):
     # Define the token's expiration time
@@ -776,22 +775,20 @@ def delete_payment(id):
 
 # Review CRUD operations
 # Create Review
-@app.route('/reviews', methods=['POST', 'GET'])
-# @login_required
-def create_review():
+@app.route('/spaces/<int:id>/reviews', methods=['POST'])
+def create_review(id):
     data = request.json
-    space_id = data.get('space_id')
     review_message = data.get('review_message')
     rating = data.get('rating')
     user_first_name = data.get('user_first_name')
     user_last_name = data.get('user_last_name')
 
-    if not all([space_id, review_message, rating, user_first_name, user_last_name]):
+    if not all([review_message, rating, user_first_name, user_last_name]):
         return jsonify({'error': 'Missing required fields'}), 400
 
     review = Review(
         user_id=current_user.id,
-        space_id=space_id,
+        space_id=id,  # Use the space ID from the URL
         review_message=review_message,
         rating=rating,
         user_first_name=user_first_name,
@@ -802,48 +799,58 @@ def create_review():
     db.session.commit()
     return jsonify({'message': 'Review created successfully'}), 201
 
-# Get Review
-@app.route('/reviews/<int:id>', methods=['GET', 'POST'])
-@login_required
-def get_review(id):
-    review = Review.query.get_or_404(id)
-    return jsonify({
-        'id': review.id,
-        'user_id': review.user_id,
-        'space_id': review.space_id,
-        'review_message': review.review_message,
-        'rating': review.rating,
-        'user_first_name': review.user_first_name,
-        'user_last_name': review.user_last_name
-    }), 200
+# Get Reviews for a Space
+@app.route('/spaces/<int:id>/reviews', methods=['GET'])
+def get_reviews(id):
+    reviews = Review.query.filter_by(space_id=id).all()
+    reviews_data = [
+        {
+            'id': review.id,
+            'user_id': review.user_id,
+            'space_id': review.space_id,
+            'reviewMessage': review.review_message,
+            'rating': review.rating,
+            'userFirstName': review.user_first_name,
+            'userLastName': review.user_last_name
+        }
+        for review in reviews
+    ]
+    return jsonify(reviews_data), 200
 
-# Update Review
-@app.route('/reviews/<int:id>', methods=['PUT'])
-# @login_required
-def update_review(id):
-    data = request.json
-    review = Review.query.get_or_404(id)
+# # Update Review
+# @app.route('/spaces/<int:space_id>/reviews/<int:review_id>', methods=['PUT'])
+# def update_review(space_id, review_id):
+#     data = request.json
+#     review = Review.query.get_or_404(review_id)
     
-    if 'review_message' in data:
-        review.review_message = data['review_message']
-    if 'rating' in data:
-        review.rating = data['rating']
-    if 'user_first_name' in data:
-        review.user_first_name = data['user_first_name']
-    if 'user_last_name' in data:
-        review.user_last_name = data['user_last_name']
+#     if review.space_id != space_id:
+#         return jsonify({'error': 'Review does not belong to this space'}), 400
+    
+#     if 'review_message' in data:
+#         review.review_message = data['review_message']
+#     if 'rating' in data:
+#         review.rating = data['rating']
+#     if 'user_first_name' in data:
+#         review.user_first_name = data['user_first_name']
+#     if 'user_last_name' in data:
+#         review.user_last_name = data['user_last_name']
 
-    db.session.commit()
-    return jsonify({'message': 'Review updated successfully'}), 200
+#     db.session.commit()
+#     return jsonify({'message': 'Review updated successfully'}), 200
 
-# Delete Review
-@app.route('/reviews/<int:id>', methods=['DELETE'])
-@login_required
-def delete_review(id):
-    review = Review.query.get_or_404(id)
-    db.session.delete(review)
-    db.session.commit()
-    return jsonify({'message': 'Review deleted successfully'}), 200
+# # Delete Review
+# @app.route('/spaces/<int:space_id>/reviews/<int:review_id>', methods=['DELETE'])
+# @login_required
+# def delete_review(space_id, review_id):
+#     review = Review.query.get_or_404(review_id)
+    
+#     if review.space_id != space_id:
+#         return jsonify({'error': 'Review does not belong to this space'}), 400
+
+#     db.session.delete(review)
+#     db.session.commit()
+#     return jsonify({'message': 'Review deleted successfully'}), 200
+
 
 @app.route('/contact', methods=['POST'])
 def create_contact():

@@ -31,7 +31,7 @@ const Navbar = () => {
   const handleLogout = () => {
     localStorage.removeItem("authToken");
     setIsLoggedIn(false); // Update login state
-    navigate("/"); // Redirect to login page
+    navigate("/signin"); // Redirect to login page
   };
 
   return (

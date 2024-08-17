@@ -329,7 +329,7 @@ const Dashboard = () => {
                       <td className="py-3 px-4">{space.rating}</td>
                       <td className="py-3 px-4">
                         <button
-                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded mr-2"
+                          className="bg-black-300 hover:bg-black-700 text-white font-bold py-1 px-2 rounded mr-2"
                           onClick={() => handleUpdateClick(space)}
                         >
                           Update
