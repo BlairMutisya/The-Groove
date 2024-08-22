@@ -1,4 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 # Initialize the SQLAlchemy instance
 db = SQLAlchemy()
@@ -78,7 +79,7 @@ class Review(db.Model):
     user_last_name = db.Column(db.String(50), nullable=False)
 
 class Contact(db.Model):
-    # id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.Text, nullable=False)
     last_name = db.Column(db.Text, nullable=False)
     phone_number = db.Column(db.Integer, nullable=False)
